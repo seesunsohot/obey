@@ -1,3 +1,182 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: #000;
+  overflow: hidden;
+}
+
+body {
+  position: relative;
+
+  font-family:
+    Futura,
+    Arial,
+    sans-serif;
+
+  touch-action: manipulation;
+}
+
+
+/* ==================================================
+   SVG CONTAINER
+================================================== */
+
+#svg-container {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 1;
+
+  filter: blur(0px);
+
+  transform:
+    translateY(0px);
+
+  transition:
+    opacity 0.55s ease,
+    filter 0.65s ease,
+    transform 0.7s
+      cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* 최초 로딩 */
+
+#svg-container.is-loading {
+  opacity: 0;
+
+  transition: none;
+}
+
+
+/* 언어 빠져나갈 때 */
+
+#svg-container.language-out {
+  opacity: 0;
+
+  filter: blur(7px);
+
+  transform:
+    translateY(-7px);
+}
+
+
+/* 새 언어 들어오기 전 */
+
+#svg-container.language-in {
+  opacity: 0;
+
+  filter: blur(7px);
+
+  transform:
+    translateY(7px);
+
+  transition: none;
+}
+
+
+/* SVG */
+
+#svg-container svg {
+  display: block;
+
+  width: 70vw;
+  max-width: 1100px;
+
+  height: auto;
+
+  overflow: visible;
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  pointer-events: none;
+}
+
+
+/* ==================================================
+   KR LETTERS
+================================================== */
+
+#letter01,
+#letter02,
+#letter03,
+#letter04,
+#letter05,
+#letter06 {
+  transition:
+    transform 1.6s
+      cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 1.45s ease,
+    filter 1.45s ease;
+
+  transform-box: fill-box;
+  transform-origin: center;
+
+  will-change:
+    transform,
+    opacity,
+    filter;
+}
+
+
+/* ==================================================
+   EN LETTERS
+================================================== */
+
+.en-letter {
+  transition:
+    transform 1.6s
+      cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 1.45s ease,
+    filter 1.45s ease;
+
+  transform-box: fill-box;
+  transform-origin: center;
+
+  will-change:
+    transform,
+    opacity,
+    filter;
+}
+
+
+/* ==================================================
+   WORD GROUP
+================================================== */
+
+#wordGroup,
+#englishWordGroup {
+  transition:
+    transform 1.6s
+      cubic-bezier(0.22, 1, 0.36, 1);
+
+  will-change:
+    transform;
+}
+
+
+/* ==================================================
+   CONTROLLER
+================================================== */
+
 #controller {
   position: absolute;
 
@@ -13,7 +192,15 @@
   border-radius: 7px;
 
   background: #919191;
+
+  touch-action: manipulation;
+
+  -webkit-tap-highlight-color:
+    transparent;
 }
+
+
+/* TITLE */
 
 .controller-title {
   height: 21px;
@@ -34,11 +221,15 @@
   user-select: none;
 }
 
+
+/* ROW */
+
 .control-row {
   width: 100%;
   height: 32px;
 
-  padding: 0 8px;
+  padding:
+    0 8px;
 
   display: flex;
   align-items: center;
@@ -47,11 +238,15 @@
   background: #919191;
 }
 
+
+/* LABEL */
+
 .control-label {
   margin: 0;
   padding: 0;
 
   border: 0;
+
   background: transparent;
 
   color: #242424;
@@ -62,14 +257,79 @@
   font-weight: 500;
 
   line-height: 1;
+
   letter-spacing: -0.08em;
 
   user-select: none;
+
+  touch-action: manipulation;
+
+  -webkit-tap-highlight-color:
+    transparent;
 }
+
+
+.mode-button {
+  cursor: pointer;
+
+  opacity: 0.48;
+
+  transition:
+    opacity 0.3s ease;
+}
+
+
+.mode-button.active-mode {
+  opacity: 1;
+}
+
 
 .mu-label {
   font-size: 13px;
 }
+
+
+/* ==================================================
+   SWITCH BUTTON
+================================================== */
+
+.switch-button {
+  position: relative;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+
+/*
+  보이는 스위치는 작게 유지하고
+  실제 터치 영역만 크게
+*/
+
+.switch-button::before {
+  content: "";
+
+  position: absolute;
+
+  top: -7px;
+  right: -7px;
+  bottom: -7px;
+  left: -7px;
+}
+
+
+/* SWITCH */
 
 .switch {
   position: relative;
@@ -82,7 +342,12 @@
   border-radius: 999px;
 
   background: #252525;
+
+  pointer-events: none;
 }
+
+
+/* KNOB */
 
 .switch-knob {
   position: absolute;
@@ -99,9 +364,34 @@
 
   transition:
     transform 1.15s
-    cubic-bezier(0.22, 1, 0.36, 1);
+      cubic-bezier(0.22, 1, 0.36, 1);
+
+  pointer-events: none;
 }
 
-.switch-button.is-on .switch-knob {
-  transform: translateX(22px);
+
+/* ON */
+
+.switch-button.is-on
+.switch-knob {
+  transform:
+    translateX(22px);
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 600px) {
+
+  #svg-container svg {
+    width: 82vw;
+  }
+
+  #controller {
+    top: 10px;
+    left: 10px;
+  }
+
 }

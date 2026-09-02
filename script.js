@@ -41,34 +41,26 @@ const music =
 let activeLanguage =
   "kr";
 
-
 let koreanMode =
   "odyssey";
-
 
 let englishMode =
   "odysseus";
 
-
 let koreanData =
   null;
-
 
 let englishData =
   null;
 
-
 let koreanAnimating =
   false;
-
 
 let englishAnimating =
   false;
 
-
 let languageChanging =
   false;
-
 
 let musicOn =
   false;
@@ -79,18 +71,14 @@ let musicOn =
 ================================================== */
 
 function wait(ms) {
-
   return new Promise(
     (resolve) => {
-
       setTimeout(
         resolve,
         ms
       );
-
     }
   );
-
 }
 
 
@@ -99,9 +87,12 @@ function wait(ms) {
 ================================================== */
 
 musicSwitch.addEventListener(
-  "click",
+  "pointerup",
 
-  async () => {
+  async (event) => {
+
+    event.preventDefault();
+
 
     if (!musicOn) {
 
@@ -109,10 +100,8 @@ musicSwitch.addEventListener(
 
         await music.play();
 
-
         musicOn =
           true;
-
 
         musicSwitch.classList.add(
           "is-on"
@@ -135,10 +124,8 @@ musicSwitch.addEventListener(
 
       music.pause();
 
-
       musicOn =
         false;
-
 
       musicSwitch.classList.remove(
         "is-on"
@@ -165,7 +152,6 @@ function updateLanguageUI() {
       "active-mode"
     );
 
-
     enLabel.classList.remove(
       "active-mode"
     );
@@ -178,7 +164,6 @@ function updateLanguageUI() {
       "active-mode"
     );
 
-
     krLabel.classList.remove(
       "active-mode"
     );
@@ -190,8 +175,6 @@ function updateLanguageUI() {
 
 /* ==================================================
    LANGUAGE CHANGE
-
-   KR ↔ EN
 ================================================== */
 
 async function changeLanguage(
@@ -217,9 +200,7 @@ async function changeLanguage(
     true;
 
 
-  /* ==================================================
-     현재 언어 사라짐
-  ================================================== */
+  /* 현재 언어 사라짐 */
 
   container.classList.add(
     "language-out"
@@ -231,9 +212,7 @@ async function changeLanguage(
   );
 
 
-  /* ==================================================
-     새로운 언어 상태 결정
-  ================================================== */
+  /* 언어 변경 */
 
   activeLanguage =
     language;
@@ -242,17 +221,13 @@ async function changeLanguage(
   updateLanguageUI();
 
 
-  /* ==================================================
-     새 언어는 초기 상태부터 시작
-  ================================================== */
-
   if (
-    language === "en"
+    language ===
+    "en"
   ) {
 
     englishMode =
       "odysseus";
-
 
     enSwitch.classList.remove(
       "is-on"
@@ -260,10 +235,6 @@ async function changeLanguage(
 
   }
 
-
-  /* ==================================================
-     현재 SVG가 완전히 안 보이는 상태에서 교체
-  ================================================== */
 
   container.classList.remove(
     "language-out"
@@ -275,9 +246,7 @@ async function changeLanguage(
   );
 
 
-  /* ==================================================
-     SVG LOAD
-  ================================================== */
+  /* 새 SVG */
 
   if (
     language === "kr"
@@ -298,25 +267,19 @@ async function changeLanguage(
   }
 
 
-  /* ==================================================
-     새 언어 등장
-
-     language-in에는 transition:none이므로
-     우선 그 상태를 브라우저에 확정시킴
-  ================================================== */
+  /*
+    language-in 상태를
+    실제 렌더링에 확정
+  */
 
   void container.offsetWidth;
 
 
+  /* 새 언어 등장 */
+
   container.classList.remove(
     "language-in"
   );
-
-
-  /*
-    여기서부터 다시
-    #svg-container 기본 transition이 적용됨
-  */
 
 
   await wait(
@@ -335,9 +298,11 @@ async function changeLanguage(
 ================================================== */
 
 krLabel.addEventListener(
-  "click",
+  "pointerup",
 
-  () => {
+  (event) => {
+
+    event.preventDefault();
 
     changeLanguage(
       "kr"
@@ -352,9 +317,11 @@ krLabel.addEventListener(
 ================================================== */
 
 enLabel.addEventListener(
-  "click",
+  "pointerup",
 
-  () => {
+  (event) => {
+
+    event.preventDefault();
 
     changeLanguage(
       "en"
@@ -369,14 +336,12 @@ enLabel.addEventListener(
 ================================================== */
 
 krSwitch.addEventListener(
-  "click",
+  "pointerup",
 
-  async () => {
+  async (event) => {
 
-    /*
-      EN 화면에서 KR 토글을
-      바로 누른 경우
-    */
+    event.preventDefault();
+
 
     if (
       activeLanguage !==
@@ -386,7 +351,6 @@ krSwitch.addEventListener(
       await changeLanguage(
         "kr"
       );
-
 
       return;
 
@@ -404,16 +368,12 @@ krSwitch.addEventListener(
 ================================================== */
 
 enSwitch.addEventListener(
-  "click",
+  "pointerup",
 
-  async () => {
+  async (event) => {
 
-    /*
-      KR 화면에서 EN 스위치를
-      바로 누른 경우
+    event.preventDefault();
 
-      우선 ODYSSEUS로 이동
-    */
 
     if (
       activeLanguage !==
@@ -423,7 +383,6 @@ enSwitch.addEventListener(
       await changeLanguage(
         "en"
       );
-
 
       return;
 
@@ -443,11 +402,6 @@ enSwitch.addEventListener(
 async function loadKorean(
   isLanguageSwitch = false
 ) {
-
-  /*
-    최초 로딩일 때만
-    is-loading 사용
-  */
 
   if (
     !isLanguageSwitch
@@ -558,30 +512,25 @@ function setupKorean(
       "#letter01"
     );
 
-
   const letter02 =
     svg.querySelector(
       "#letter02"
     );
-
 
   const letter03 =
     svg.querySelector(
       "#letter03"
     );
 
-
   const letter04 =
     svg.querySelector(
       "#letter04"
     );
 
-
   const letter05 =
     svg.querySelector(
       "#letter05"
     );
-
 
   const letter06 =
     svg.querySelector(
@@ -590,14 +539,12 @@ function setupKorean(
 
 
   const letters = [
-
     letter01,
     letter02,
     letter03,
     letter04,
     letter05,
     letter06,
-
   ];
 
 
@@ -614,10 +561,6 @@ function setupKorean(
 
   }
 
-
-  /* ==================================================
-     GROUP
-  ================================================== */
 
   const SVG_NS =
     "http://www.w3.org/2000/svg";
@@ -650,9 +593,7 @@ function setupKorean(
   );
 
 
-  /* ==================================================
-     '이' 위치
-  ================================================== */
+  /* '이' 위치 */
 
   const GAP =
     25;
@@ -682,10 +623,6 @@ function setupKorean(
     );
 
 
-  /* ==================================================
-     CENTER
-  ================================================== */
-
   function getSvgCenterX() {
 
     const viewBox =
@@ -694,7 +631,8 @@ function setupKorean(
 
     return (
       viewBox.x +
-      viewBox.width / 2
+      viewBox.width /
+      2
     );
 
   }
@@ -706,7 +644,6 @@ function setupKorean(
 
     let minX =
       Infinity;
-
 
     let maxX =
       -Infinity;
@@ -738,22 +675,15 @@ function setupKorean(
 
 
     return {
-
-      x:
-        minX,
-
+      x: minX,
       width:
-        maxX -
-        minX,
-
+        maxX - minX,
     };
 
   }
 
 
-  /* ==================================================
-     오디세우스 CENTER
-  ================================================== */
+  /* 오디세우스 중앙 */
 
   const odysseusBox =
     getCombinedBox(
@@ -778,17 +708,13 @@ function setupKorean(
     odysseusCenter;
 
 
-  /* ==================================================
-     오디세이 CENTER
-  ================================================== */
+  /* 오디세이 중앙 */
 
   const box01 =
     letter01.getBBox();
 
-
   const box02 =
     letter02.getBBox();
-
 
   const box03 =
     letter03.getBBox();
@@ -815,7 +741,6 @@ function setupKorean(
 
   const odysseyEnd =
     Math.max(
-
       box01.x +
         box01.width,
 
@@ -826,7 +751,6 @@ function setupKorean(
         box03.width,
 
       iFinalRight
-
     );
 
 
@@ -841,10 +765,6 @@ function setupKorean(
     getSvgCenterX() -
     odysseyCenter;
 
-
-  /* ==================================================
-     SAVE
-  ================================================== */
 
   koreanData = {
 
@@ -862,10 +782,6 @@ function setupKorean(
 
   };
 
-
-  /* ==================================================
-     현재 저장된 KR 상태 표시
-  ================================================== */
 
   if (
     koreanMode ===
@@ -897,17 +813,15 @@ function restoreKoreanTransitions() {
 
 
   const {
-
     letter04,
     letter05,
     letter06,
     wordGroup,
-
   } =
     koreanData;
 
 
-  const letterTransition =
+  const transition =
     `
       transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
       opacity 1.45s ease,
@@ -916,15 +830,13 @@ function restoreKoreanTransitions() {
 
 
   letter04.style.transition =
-    letterTransition;
-
+    transition;
 
   letter05.style.transition =
-    letterTransition;
-
+    transition;
 
   letter06.style.transition =
-    letterTransition;
+    transition;
 
 
   wordGroup.style.transition =
@@ -934,7 +846,7 @@ function restoreKoreanTransitions() {
 
 
 /* ==================================================
-   KR — 오디세이
+   KR ODYSSEY INSTANT
 ================================================== */
 
 function showOdysseyInstant() {
@@ -964,60 +876,44 @@ function showOdysseyInstant() {
   letter04.style.transition =
     "none";
 
-
   letter05.style.transition =
     "none";
 
-
   letter06.style.transition =
     "none";
-
 
   wordGroup.style.transition =
     "none";
 
 
-  /* 우 */
-
   letter04.style.opacity =
     "0";
 
-
   letter04.style.filter =
     "blur(10px)";
-
 
   letter04.style.transform =
     "translateY(-150px) scale(0.97)";
 
 
-  /* 스 */
-
   letter05.style.opacity =
     "0";
 
-
   letter05.style.filter =
     "blur(10px)";
-
 
   letter05.style.transform =
     "translateY(-170px) scale(0.97)";
 
 
-  /* 이 */
-
   letter06.style.visibility =
     "visible";
-
 
   letter06.style.opacity =
     "1";
 
-
   letter06.style.filter =
     "blur(0px)";
-
 
   letter06.style.transform =
     `translate(
@@ -1025,8 +921,6 @@ function showOdysseyInstant() {
       ${iFinalY}px
     )`;
 
-
-  /* 중앙 */
 
   wordGroup.style.transform =
     `translateX(
@@ -1057,7 +951,7 @@ function showOdysseyInstant() {
 
 
 /* ==================================================
-   KR — 오디세우스
+   KR ODYSSEUS INSTANT
 ================================================== */
 
 function showOdysseusInstant() {
@@ -1087,56 +981,41 @@ function showOdysseusInstant() {
   letter04.style.transition =
     "none";
 
-
   letter05.style.transition =
     "none";
 
-
   letter06.style.transition =
     "none";
-
 
   wordGroup.style.transition =
     "none";
 
 
-  /* 우 */
-
   letter04.style.opacity =
     "1";
 
-
   letter04.style.filter =
     "blur(0px)";
-
 
   letter04.style.transform =
     "translateY(0px) scale(1)";
 
 
-  /* 스 */
-
   letter05.style.opacity =
     "1";
 
-
   letter05.style.filter =
     "blur(0px)";
-
 
   letter05.style.transform =
     "translateY(0px) scale(1)";
 
 
-  /* 이 */
-
   letter06.style.opacity =
     "0";
 
-
   letter06.style.filter =
     "blur(8px)";
-
 
   letter06.style.transform =
     `translate(
@@ -1144,8 +1023,6 @@ function showOdysseusInstant() {
       ${iFinalY + 150}px
     )`;
 
-
-  /* 중앙 */
 
   wordGroup.style.transform =
     `translateX(
@@ -1212,10 +1089,6 @@ function toggleKorean() {
     koreanData;
 
 
-  /* ==================================================
-     오디세이 → 오디세우스
-  ================================================== */
-
   if (
     koreanMode ===
     "odyssey"
@@ -1236,24 +1109,18 @@ function toggleKorean() {
       )`;
 
 
-    /* 이 */
-
     letter06.style.transform =
       `translate(
         ${iFinalX}px,
         ${iFinalY + 150}px
       )`;
 
-
     letter06.style.opacity =
       "0";
-
 
     letter06.style.filter =
       "blur(8px)";
 
-
-    /* 우 */
 
     setTimeout(
       () => {
@@ -1261,21 +1128,16 @@ function toggleKorean() {
         letter04.style.transform =
           "translateY(0px) scale(1)";
 
-
         letter04.style.opacity =
           "1";
-
 
         letter04.style.filter =
           "blur(0px)";
 
       },
-
       220
     );
 
-
-    /* 스 */
 
     setTimeout(
       () => {
@@ -1283,25 +1145,17 @@ function toggleKorean() {
         letter05.style.transform =
           "translateY(0px) scale(1)";
 
-
         letter05.style.opacity =
           "1";
-
 
         letter05.style.filter =
           "blur(0px)";
 
       },
-
       320
     );
 
   }
-
-
-  /* ==================================================
-     오디세우스 → 오디세이
-  ================================================== */
 
   else {
 
@@ -1320,21 +1174,15 @@ function toggleKorean() {
       )`;
 
 
-    /* 우 */
-
     letter04.style.transform =
       "translateY(-150px) scale(0.97)";
-
 
     letter04.style.opacity =
       "0";
 
-
     letter04.style.filter =
       "blur(10px)";
 
-
-    /* 스 */
 
     setTimeout(
       () => {
@@ -1342,21 +1190,16 @@ function toggleKorean() {
         letter05.style.transform =
           "translateY(-170px) scale(0.97)";
 
-
         letter05.style.opacity =
           "0";
-
 
         letter05.style.filter =
           "blur(10px)";
 
       },
-
       90
     );
 
-
-    /* 이 */
 
     setTimeout(
       () => {
@@ -1367,16 +1210,13 @@ function toggleKorean() {
             ${iFinalY}px
           )`;
 
-
         letter06.style.opacity =
           "1";
-
 
         letter06.style.filter =
           "blur(0px)";
 
       },
-
       310
     );
 
@@ -1390,7 +1230,6 @@ function toggleKorean() {
         false;
 
     },
-
     1750
   );
 
@@ -1459,10 +1298,6 @@ async function loadEnglish(
       );
 
 
-    /* ==================================================
-       ODYSSEUS SVG
-    ================================================== */
-
     container.innerHTML =
       odText;
 
@@ -1482,10 +1317,6 @@ async function loadEnglish(
     }
 
 
-    /* ==================================================
-       OBEY SVG 파싱
-    ================================================== */
-
     const parser =
       new DOMParser();
 
@@ -1503,51 +1334,40 @@ async function loadEnglish(
       );
 
 
-    /* ==================================================
-       ODYSSEUS LETTERS
-    ================================================== */
-
     const O =
       svg.querySelector(
         "#letter_O"
       );
-
 
     const D =
       svg.querySelector(
         "#letter_D"
       );
 
-
     const Y =
       svg.querySelector(
         "#letter_Y"
       );
-
 
     const S =
       svg.querySelector(
         "#letter_S"
       );
 
-
     const S2 =
       svg.querySelector(
         "#letter_S2"
       );
-
 
     const E =
       svg.querySelector(
         "#letter_E"
       );
 
-
     const U =
       svg.querySelector(
         "#letter_U"
       );
-
 
     const S1 =
       svg.querySelector(
@@ -1556,7 +1376,6 @@ async function loadEnglish(
 
 
     const odLetters = [
-
       O,
       D,
       Y,
@@ -1565,7 +1384,6 @@ async function loadEnglish(
       E,
       U,
       S1,
-
     ];
 
 
@@ -1593,10 +1411,6 @@ async function loadEnglish(
       }
     );
 
-
-    /* ==================================================
-       B
-    ================================================== */
 
     const obB =
       obSvg.querySelector(
@@ -1633,10 +1447,6 @@ async function loadEnglish(
       B
     );
 
-
-    /* ==================================================
-       GROUP
-    ================================================== */
 
     const SVG_NS =
       "http://www.w3.org/2000/svg";
@@ -1679,10 +1489,6 @@ async function loadEnglish(
     );
 
 
-    /* ==================================================
-       OBEY BBOX
-    ================================================== */
-
     const targetBoxes =
       getObeyBoxes(
         obText
@@ -1713,22 +1519,15 @@ async function loadEnglish(
     const OBox =
       O.getBBox();
 
-
     const EBox =
       E.getBBox();
-
 
     const YBox =
       Y.getBBox();
 
-
     const BBox =
       B.getBBox();
 
-
-    /* ==================================================
-       TARGET POSITIONS
-    ================================================== */
 
     const targetOX =
       obeyOffsetX +
@@ -1803,12 +1602,6 @@ async function loadEnglish(
     };
 
 
-    /* ==================================================
-       첫 상태
-
-       항상 ODYSSEUS
-    ================================================== */
-
     showEnglishOdysseusInstant();
 
 
@@ -1869,22 +1662,17 @@ function getObeyBoxes(
   holder.style.position =
     "absolute";
 
-
   holder.style.left =
     "-10000px";
-
 
   holder.style.top =
     "-10000px";
 
-
   holder.style.visibility =
     "hidden";
 
-
   holder.style.pointerEvents =
     "none";
-
 
   holder.innerHTML =
     svgText;
@@ -1906,18 +1694,15 @@ function getObeyBoxes(
       "#letter_O"
     );
 
-
   const B =
     svg.querySelector(
       "#letter_B"
     );
 
-
   const E =
     svg.querySelector(
       "#letter_E"
     );
-
 
   const Y =
     svg.querySelector(
@@ -1952,17 +1737,10 @@ function getObeyBoxes(
 
     return {
 
-      x:
-        box.x,
-
-      y:
-        box.y,
-
-      width:
-        box.width,
-
-      height:
-        box.height,
+      x: box.x,
+      y: box.y,
+      width: box.width,
+      height: box.height,
 
     };
 
@@ -1971,17 +1749,10 @@ function getObeyBoxes(
 
   const result = {
 
-    O:
-      copyBox(O),
-
-    B:
-      copyBox(B),
-
-    E:
-      copyBox(E),
-
-    Y:
-      copyBox(Y),
+    O: copyBox(O),
+    B: copyBox(B),
+    E: copyBox(E),
+    Y: copyBox(Y),
 
   };
 
@@ -2082,7 +1853,6 @@ function showEnglishOdysseusInstant() {
 
 
   const all = [
-
     O,
     D,
     Y,
@@ -2092,7 +1862,6 @@ function showEnglishOdysseusInstant() {
     U,
     S1,
     B,
-
   ];
 
 
@@ -2121,10 +1890,8 @@ function showEnglishOdysseusInstant() {
       letter.style.opacity =
         "1";
 
-
       letter.style.filter =
         "blur(0px)";
-
 
       letter.style.transform =
         "translate(0px, 0px)";
@@ -2133,15 +1900,11 @@ function showEnglishOdysseusInstant() {
   );
 
 
-  /* B 숨김 */
-
   B.style.opacity =
     "0";
 
-
   B.style.filter =
     "blur(10px)";
-
 
   B.style.transform =
     `translate(
@@ -2223,10 +1986,6 @@ function toggleEnglish() {
     englishData;
 
 
-  /* ==================================================
-     ODYSSEUS → OBEY
-  ================================================== */
-
   if (
     englishMode ===
     "odysseus"
@@ -2241,16 +2000,12 @@ function toggleEnglish() {
     );
 
 
-    /* 공통 O */
-
     O.style.transform =
       `translate(
         ${targetOX}px,
         ${targetOY}px
       )`;
 
-
-    /* 공통 E */
 
     E.style.transform =
       `translate(
@@ -2259,8 +2014,6 @@ function toggleEnglish() {
       )`;
 
 
-    /* 공통 Y */
-
     Y.style.transform =
       `translate(
         ${targetYX}px,
@@ -2268,35 +2021,25 @@ function toggleEnglish() {
       )`;
 
 
-    /* D */
-
     D.style.transform =
       "translateY(-140px)";
 
-
     D.style.opacity =
       "0";
-
 
     D.style.filter =
       "blur(10px)";
 
 
-    /* S */
-
     S.style.transform =
       "translateY(150px)";
-
 
     S.style.opacity =
       "0";
 
-
     S.style.filter =
       "blur(10px)";
 
-
-    /* S2 */
 
     setTimeout(
       () => {
@@ -2304,21 +2047,16 @@ function toggleEnglish() {
         S2.style.transform =
           "translateY(-150px)";
 
-
         S2.style.opacity =
           "0";
-
 
         S2.style.filter =
           "blur(10px)";
 
       },
-
       70
     );
 
-
-    /* U */
 
     setTimeout(
       () => {
@@ -2326,21 +2064,16 @@ function toggleEnglish() {
         U.style.transform =
           "translateY(160px)";
 
-
         U.style.opacity =
           "0";
-
 
         U.style.filter =
           "blur(10px)";
 
       },
-
       130
     );
 
-
-    /* S1 */
 
     setTimeout(
       () => {
@@ -2348,21 +2081,16 @@ function toggleEnglish() {
         S1.style.transform =
           "translateY(-160px)";
 
-
         S1.style.opacity =
           "0";
-
 
         S1.style.filter =
           "blur(10px)";
 
       },
-
       190
     );
 
-
-    /* B 등장 */
 
     setTimeout(
       () => {
@@ -2373,25 +2101,17 @@ function toggleEnglish() {
             ${targetBY}px
           )`;
 
-
         B.style.opacity =
           "1";
-
 
         B.style.filter =
           "blur(0px)";
 
       },
-
       300
     );
 
   }
-
-
-  /* ==================================================
-     OBEY → ODYSSEUS
-  ================================================== */
 
   else {
 
@@ -2404,38 +2124,28 @@ function toggleEnglish() {
     );
 
 
-    /* B 사라짐 */
-
     B.style.transform =
       `translate(
         ${targetBX}px,
         ${targetBY + 120}px
       )`;
 
-
     B.style.opacity =
       "0";
-
 
     B.style.filter =
       "blur(10px)";
 
 
-    /* 공통 글자 원래 위치 */
-
     O.style.transform =
       "translate(0px, 0px)";
-
 
     E.style.transform =
       "translate(0px, 0px)";
 
-
     Y.style.transform =
       "translate(0px, 0px)";
 
-
-    /* D */
 
     setTimeout(
       () => {
@@ -2443,21 +2153,16 @@ function toggleEnglish() {
         D.style.transform =
           "translateY(0px)";
 
-
         D.style.opacity =
           "1";
-
 
         D.style.filter =
           "blur(0px)";
 
       },
-
       180
     );
 
-
-    /* S */
 
     setTimeout(
       () => {
@@ -2465,21 +2170,16 @@ function toggleEnglish() {
         S.style.transform =
           "translateY(0px)";
 
-
         S.style.opacity =
           "1";
-
 
         S.style.filter =
           "blur(0px)";
 
       },
-
       230
     );
 
-
-    /* S2 */
 
     setTimeout(
       () => {
@@ -2487,21 +2187,16 @@ function toggleEnglish() {
         S2.style.transform =
           "translateY(0px)";
 
-
         S2.style.opacity =
           "1";
-
 
         S2.style.filter =
           "blur(0px)";
 
       },
-
       280
     );
 
-
-    /* U */
 
     setTimeout(
       () => {
@@ -2509,21 +2204,16 @@ function toggleEnglish() {
         U.style.transform =
           "translateY(0px)";
 
-
         U.style.opacity =
           "1";
-
 
         U.style.filter =
           "blur(0px)";
 
       },
-
       330
     );
 
-
-    /* S1 */
 
     setTimeout(
       () => {
@@ -2531,16 +2221,13 @@ function toggleEnglish() {
         S1.style.transform =
           "translateY(0px)";
 
-
         S1.style.opacity =
           "1";
-
 
         S1.style.filter =
           "blur(0px)";
 
       },
-
       380
     );
 
@@ -2554,7 +2241,6 @@ function toggleEnglish() {
         false;
 
     },
-
     1750
   );
 
