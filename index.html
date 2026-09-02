@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>Odysseus</title>
+
+    <link
+      rel="stylesheet"
+      href="./style.css"
+    />
+  </head>
+
+  <body>
+    <aside id="controller">
+      <div class="controller-title">
+        ODYSSEUS
+      </div>
+
+      <!-- KR -->
+      <div class="control-row">
+        <button
+          class="control-label mode-button active-mode"
+          id="kr-label"
+          type="button"
+        >
+          KR
+        </button>
+
+        <button
+          class="switch-button"
+          id="kr-switch"
+          type="button"
+          aria-label="Korean lettering toggle"
+        >
+          <span class="switch">
+            <span class="switch-knob"></span>
+          </span>
+        </button>
+      </div>
+
+      <!-- EN -->
+      <div class="control-row">
+        <button
+          class="control-label mode-button"
+          id="en-label"
+          type="button"
+        >
+          EN
+        </button>
+
+        <button
+          class="switch-button"
+          id="en-switch"
+          type="button"
+          aria-label="English lettering toggle"
+        >
+          <span class="switch">
+            <span class="switch-knob"></span>
+          </span>
+        </button>
+      </div>
+
+      <!-- MUSIC -->
+      <div class="control-row">
+        <span class="control-label mu-label">
+          Mu
+        </span>
+
+        <button
+          class="switch-button"
+          id="music-switch"
+          type="button"
+          aria-label="Music toggle"
+        >
+          <span class="switch">
+            <span class="switch-knob"></span>
+          </span>
+        </button>
+      </div>
+    </aside>
+
+    <main
+      id="svg-container"
+      class="is-loading"
+    ></main>
+
+    <audio
+      id="music"
+      src="./audio/The Bow.mp3"
+      preload="auto"
+      loop
+    ></audio>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
