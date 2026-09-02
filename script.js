@@ -200,8 +200,6 @@ async function changeLanguage(
     true;
 
 
-  /* 현재 언어 사라짐 */
-
   container.classList.add(
     "language-out"
   );
@@ -211,8 +209,6 @@ async function changeLanguage(
     550
   );
 
-
-  /* 언어 변경 */
 
   activeLanguage =
     language;
@@ -246,10 +242,9 @@ async function changeLanguage(
   );
 
 
-  /* 새 SVG */
-
   if (
-    language === "kr"
+    language ===
+    "kr"
   ) {
 
     await loadKorean(
@@ -267,15 +262,8 @@ async function changeLanguage(
   }
 
 
-  /*
-    language-in 상태를
-    실제 렌더링에 확정
-  */
-
   void container.offsetWidth;
 
-
-  /* 새 언어 등장 */
 
   container.classList.remove(
     "language-in"
@@ -593,8 +581,6 @@ function setupKorean(
   );
 
 
-  /* '이' 위치 */
-
   const GAP =
     25;
 
@@ -683,8 +669,6 @@ function setupKorean(
   }
 
 
-  /* 오디세우스 중앙 */
-
   const odysseusBox =
     getCombinedBox(
       [
@@ -707,8 +691,6 @@ function setupKorean(
     getSvgCenterX() -
     odysseusCenter;
 
-
-  /* 오디세이 중앙 */
 
   const box01 =
     letter01.getBBox();
@@ -802,7 +784,7 @@ function setupKorean(
 
 
 /* ==================================================
-   KR TRANSITION RESTORE
+   KR TRANSITIONS
 ================================================== */
 
 function restoreKoreanTransitions() {
@@ -846,7 +828,7 @@ function restoreKoreanTransitions() {
 
 
 /* ==================================================
-   KR ODYSSEY INSTANT
+   ODYSSEY INITIAL
 ================================================== */
 
 function showOdysseyInstant() {
@@ -951,7 +933,7 @@ function showOdysseyInstant() {
 
 
 /* ==================================================
-   KR ODYSSEUS INSTANT
+   ODYSSEUS INITIAL
 ================================================== */
 
 function showOdysseusInstant() {
@@ -1660,7 +1642,7 @@ function getObeyBoxes(
 
 
   holder.style.position =
-    "absolute";
+    "fixed";
 
   holder.style.left =
     "-10000px";
@@ -1737,10 +1719,17 @@ function getObeyBoxes(
 
     return {
 
-      x: box.x,
-      y: box.y,
-      width: box.width,
-      height: box.height,
+      x:
+        box.x,
+
+      y:
+        box.y,
+
+      width:
+        box.width,
+
+      height:
+        box.height,
 
     };
 
@@ -1749,10 +1738,17 @@ function getObeyBoxes(
 
   const result = {
 
-    O: copyBox(O),
-    B: copyBox(B),
-    E: copyBox(E),
-    Y: copyBox(Y),
+    O:
+      copyBox(O),
+
+    B:
+      copyBox(B),
+
+    E:
+      copyBox(E),
+
+    Y:
+      copyBox(Y),
 
   };
 
@@ -1766,7 +1762,7 @@ function getObeyBoxes(
 
 
 /* ==================================================
-   EN TRANSITION RESTORE
+   EN TRANSITIONS
 ================================================== */
 
 function restoreEnglishTransitions() {

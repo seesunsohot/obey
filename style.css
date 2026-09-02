@@ -10,12 +10,17 @@ body {
   width: 100%;
   height: 100%;
 
-  background: #000;
+  background: #000 !important;
+
   overflow: hidden;
 }
 
 body {
   position: relative;
+
+  min-height: 100%;
+
+  background: #000 !important;
 
   font-family:
     Futura,
@@ -23,6 +28,9 @@ body {
     sans-serif;
 
   touch-action: manipulation;
+
+  -webkit-tap-highlight-color:
+    transparent;
 }
 
 
@@ -31,7 +39,7 @@ body {
 ================================================== */
 
 #svg-container {
-  position: absolute;
+  position: fixed;
 
   inset: 0;
 
@@ -39,21 +47,27 @@ body {
   height: 100%;
 
   display: flex;
-  justify-content: center;
+
   align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background: #000;
 
   opacity: 1;
 
   filter: blur(0px);
 
-  transform:
-    translateY(0px);
+  transform: translateY(0px);
 
   transition:
     opacity 0.55s ease,
     filter 0.65s ease,
     transform 0.7s
       cubic-bezier(0.22, 1, 0.36, 1);
+
+  z-index: 1;
 }
 
 
@@ -78,7 +92,7 @@ body {
 }
 
 
-/* 새 언어 들어오기 전 */
+/* 새 언어 들어올 때 */
 
 #svg-container.language-in {
   opacity: 0;
@@ -92,15 +106,21 @@ body {
 }
 
 
-/* SVG */
+/* ==================================================
+   SVG
+
+   중요한 부분:
+   화면 정중앙 + 크기 제한
+================================================== */
 
 #svg-container svg {
   display: block;
 
-  width: 70vw;
-  max-width: 1100px;
+  width: auto !important;
+  height: auto !important;
 
-  height: auto;
+  max-width: 62vw !important;
+  max-height: 44vh !important;
 
   overflow: visible;
 
@@ -108,6 +128,8 @@ body {
   -webkit-user-select: none;
 
   pointer-events: none;
+
+  flex: 0 0 auto;
 }
 
 
@@ -168,8 +190,7 @@ body {
     transform 1.6s
       cubic-bezier(0.22, 1, 0.36, 1);
 
-  will-change:
-    transform;
+  will-change: transform;
 }
 
 
@@ -178,7 +199,7 @@ body {
 ================================================== */
 
 #controller {
-  position: absolute;
+  position: fixed;
 
   top: 13px;
   left: 13px;
@@ -206,6 +227,7 @@ body {
   height: 21px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -232,6 +254,7 @@ body {
     0 8px;
 
   display: flex;
+
   align-items: center;
   justify-content: space-between;
 
@@ -290,7 +313,7 @@ body {
 
 
 /* ==================================================
-   SWITCH BUTTON
+   SWITCH
 ================================================== */
 
 .switch-button {
@@ -312,10 +335,7 @@ body {
 }
 
 
-/*
-  보이는 스위치는 작게 유지하고
-  실제 터치 영역만 크게
-*/
+/* 실제 터치 영역 */
 
 .switch-button::before {
   content: "";
@@ -328,8 +348,6 @@ body {
   left: -7px;
 }
 
-
-/* SWITCH */
 
 .switch {
   position: relative;
@@ -346,8 +364,6 @@ body {
   pointer-events: none;
 }
 
-
-/* KNOB */
 
 .switch-knob {
   position: absolute;
@@ -370,8 +386,6 @@ body {
 }
 
 
-/* ON */
-
 .switch-button.is-on
 .switch-knob {
   transform:
@@ -386,7 +400,11 @@ body {
 @media (max-width: 600px) {
 
   #svg-container svg {
-    width: 82vw;
+    width: auto !important;
+    height: auto !important;
+
+    max-width: 78vw !important;
+    max-height: 36vh !important;
   }
 
   #controller {
