@@ -11,10 +11,7 @@
   </head>
 
   <body>
-    <!-- =========================================
-         BACKGROUND VIDEO : FORWARD
-    ========================================== -->
-
+    <!-- FORWARD VIDEO -->
     <video
       id="bg-video-forward"
       class="bg-video active"
@@ -26,10 +23,7 @@
       <source src="./video/odysseus video.mp4" type="video/mp4" />
     </video>
 
-    <!-- =========================================
-         BACKGROUND VIDEO : REVERSE
-    ========================================== -->
-
+    <!-- REVERSE VIDEO -->
     <video
       id="bg-video-reverse"
       class="bg-video"
@@ -40,14 +34,8 @@
       <source src="./video/odysseus reverse.mp4" type="video/mp4" />
     </video>
 
-    <!-- =========================================
-         CONTROLLER
-    ========================================== -->
-
     <aside id="controller">
       <div class="controller-title">ODYSSEUS</div>
-
-      <!-- KR -->
 
       <div class="control-row">
         <button
@@ -58,48 +46,29 @@
           KR
         </button>
 
-        <button
-          class="switch-button"
-          id="kr-switch"
-          type="button"
-          aria-label="Korean lettering toggle"
-        >
+        <button class="switch-button" id="kr-switch" type="button">
           <span class="switch">
             <span class="switch-knob"></span>
           </span>
         </button>
       </div>
-
-      <!-- EN -->
 
       <div class="control-row">
         <button class="control-label mode-button" id="en-label" type="button">
           EN
         </button>
 
-        <button
-          class="switch-button"
-          id="en-switch"
-          type="button"
-          aria-label="English lettering toggle"
-        >
+        <button class="switch-button" id="en-switch" type="button">
           <span class="switch">
             <span class="switch-knob"></span>
           </span>
         </button>
       </div>
 
-      <!-- MUSIC -->
-
       <div class="control-row">
         <span class="control-label mu-label"> Mu </span>
 
-        <button
-          class="switch-button"
-          id="music-switch"
-          type="button"
-          aria-label="Music toggle"
-        >
+        <button class="switch-button" id="music-switch" type="button">
           <span class="switch">
             <span class="switch-knob"></span>
           </span>
@@ -107,17 +76,7 @@
       </div>
     </aside>
 
-    <!-- =========================================
-         LETTERING POSITION STAGE
-    ========================================== -->
-
-    <div id="svg-stage">
-      <main id="svg-container" class="is-loading"></main>
-    </div>
-
-    <!-- =========================================
-         MUSIC
-    ========================================== -->
+    <main id="svg-container" class="is-loading"></main>
 
     <audio id="music" src="./audio/The Bow.mp3" preload="auto" loop></audio>
 

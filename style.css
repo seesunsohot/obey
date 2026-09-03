@@ -63,13 +63,10 @@ body {
 }
 
 /* ==================================================
-   SVG STAGE
-
-   ★ 위치는 여기서만 결정
-   ★ 이 요소는 절대 애니메이션하지 않음
+   SVG CONTAINER
 ================================================== */
 
-#svg-stage {
+#svg-container {
   position: fixed;
 
   inset: 0;
@@ -82,31 +79,6 @@ body {
   align-items: center;
   justify-content: center;
 
-  transform: translate3d(0, -370px, 0);
-
-  z-index: 1;
-
-  pointer-events: none;
-}
-
-/* ==================================================
-   SVG CONTAINER
-
-   ★ 위치 관련 transform 없음
-   ★ blur + opacity만 애니메이션
-================================================== */
-
-#svg-container {
-  position: relative;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  height: 100%;
-
   overflow: hidden;
 
   background: transparent;
@@ -116,22 +88,24 @@ body {
   filter: blur(0px);
 
   /*
-    중요:
-    transform 없음
+    글자 위치
+    이 값은 항상 유지
   */
+  transform: translateY(-370px);
 
+  /*
+    transform은 애니메이션 안 함
+  */
   transition:
-    opacity 0.14s ease-out,
-    filter 0.17s ease-out;
+    opacity 0.16s ease,
+    filter 0.18s ease;
+
+  z-index: 1;
 
   pointer-events: none;
-
-  will-change: opacity, filter;
 }
 
-/* ==================================================
-   최초 로딩
-================================================== */
+/* 최초 로딩 */
 
 #svg-container.is-loading {
   opacity: 0;
@@ -139,11 +113,7 @@ body {
   transition: none;
 }
 
-/* ==================================================
-   LANGUAGE OUT
-
-   제자리에서 blur + fade
-================================================== */
+/* 언어 사라질 때 */
 
 #svg-container.language-out {
   opacity: 0;
@@ -151,11 +121,7 @@ body {
   filter: blur(8px);
 }
 
-/* ==================================================
-   LANGUAGE IN
-
-   똑같은 자리에서 등장
-================================================== */
+/* 언어 들어올 때 */
 
 #svg-container.language-in {
   opacity: 0;
@@ -256,19 +222,12 @@ body {
 
   background: #919191;
 
-  /*
-    모바일 터치
-  */
   pointer-events: auto;
 
   touch-action: manipulation;
 
   -webkit-tap-highlight-color: transparent;
 }
-
-/* ==================================================
-   TITLE
-================================================== */
 
 .controller-title {
   height: 21px;
@@ -307,8 +266,6 @@ body {
   justify-content: space-between;
 
   background: #919191;
-
-  pointer-events: auto;
 }
 
 /* ==================================================
@@ -336,11 +293,10 @@ body {
   letter-spacing: -0.08em;
 
   user-select: none;
-  -webkit-user-select: none;
-
-  touch-action: manipulation;
 
   pointer-events: auto;
+
+  touch-action: manipulation;
 
   -webkit-tap-highlight-color: transparent;
 }
@@ -350,7 +306,7 @@ body {
 
   opacity: 0.48;
 
-  transition: opacity 0.18s ease;
+  transition: opacity 0.2s ease;
 }
 
 .mode-button.active-mode {
@@ -362,7 +318,7 @@ body {
 }
 
 /* ==================================================
-   SWITCH BUTTON
+   SWITCH
 ================================================== */
 
 .switch-button {
@@ -382,29 +338,7 @@ body {
   touch-action: manipulation;
 
   -webkit-tap-highlight-color: transparent;
-
-  /*
-    모바일에서 실제 버튼 면적 확보
-  */
-  min-width: 41px;
-  min-height: 32px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
 }
-
-/* 기존 ::before 터치영역 제거
-   모바일에서 겹치는 문제 방지 */
-
-.switch-button::before {
-  content: none;
-}
-
-/* ==================================================
-   SWITCH
-================================================== */
 
 .switch {
   position: relative;
@@ -413,8 +347,6 @@ body {
 
   width: 41px;
   height: 19px;
-
-  flex: 0 0 auto;
 
   border-radius: 999px;
 
@@ -450,14 +382,6 @@ body {
 ================================================== */
 
 @media (max-width: 600px) {
-  #svg-stage {
-    /*
-      현재와 같은 글자 위치 유지.
-      모바일에서 너무 위면 여기만 바꾸면 됨.
-    */
-    transform: translate3d(0, -370px, 0);
-  }
-
   #svg-container svg {
     width: auto !important;
 
@@ -470,19 +394,17 @@ body {
 
   #controller {
     top: 10px;
-    left: 10px;
-  }
 
-  .switch-button {
-    min-width: 41px;
-    min-height: 32px;
+    left: 10px;
   }
 
   .bg-video {
     left: 50%;
+
     bottom: 0;
 
     width: 100vw;
+
     height: auto;
 
     transform: translateX(-50%);

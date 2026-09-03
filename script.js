@@ -1,3 +1,17 @@
+const container = document.querySelector("#svg-container");
+
+const krLabel = document.querySelector("#kr-label");
+
+const enLabel = document.querySelector("#en-label");
+
+const krSwitch = document.querySelector("#kr-switch");
+
+const enSwitch = document.querySelector("#en-switch");
+
+const musicSwitch = document.querySelector("#music-switch");
+
+const music = document.querySelector("#music");
+
 /* ==================================================
    BACKGROUND VIDEO
 ================================================== */
@@ -47,24 +61,6 @@ reverseVideo.addEventListener("ended", () => {
 });
 
 /* ==================================================
-   MAIN
-================================================== */
-
-const container = document.querySelector("#svg-container");
-
-const krLabel = document.querySelector("#kr-label");
-
-const enLabel = document.querySelector("#en-label");
-
-const krSwitch = document.querySelector("#kr-switch");
-
-const enSwitch = document.querySelector("#en-switch");
-
-const musicSwitch = document.querySelector("#music-switch");
-
-const music = document.querySelector("#music");
-
-/* ==================================================
    STATE
 ================================================== */
 
@@ -98,9 +94,6 @@ function wait(ms) {
 
 /* ==================================================
    MUSIC
-
-   click 사용
-   = 마우스 + 모바일 터치 둘 다
 ================================================== */
 
 musicSwitch.addEventListener(
@@ -145,9 +138,6 @@ function updateLanguageUI() {
 
 /* ==================================================
    LANGUAGE CHANGE
-
-   ★ 위치 변화 없음
-   ★ blur + opacity만
 ================================================== */
 
 async function changeLanguage(language) {
@@ -162,13 +152,13 @@ async function changeLanguage(language) {
   languageChanging = true;
 
   /*
-    현재 글자 제자리에서
-    빠르게 blur-out
+    위치 이동 없이
+    현재 자리에서 blur + fade
   */
 
   container.classList.add("language-out");
 
-  await wait(140);
+  await wait(160);
 
   activeLanguage = language;
 
@@ -181,8 +171,8 @@ async function changeLanguage(language) {
   }
 
   /*
-    완전히 안 보이는 상태에서
-    SVG 교체
+    완전히 사라진 상태에서
+    SVG만 교체
   */
 
   if (language === "kr") {
@@ -191,24 +181,16 @@ async function changeLanguage(language) {
     await loadEnglish(true);
   }
 
-  /*
-    새 SVG도 blur 상태
-  */
-
   container.classList.remove("language-out");
+
+  /*
+    새 SVG도 동일 위치에서
+    blur 상태로 준비
+  */
 
   container.classList.add("language-in");
 
-  /*
-    브라우저에 blur 상태 확정
-  */
-
   void container.offsetWidth;
-
-  /*
-    다음 프레임에서
-    blur 제거
-  */
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -216,13 +198,13 @@ async function changeLanguage(language) {
     });
   });
 
-  await wait(190);
+  await wait(220);
 
   languageChanging = false;
 }
 
 /* ==================================================
-   LANGUAGE BUTTONS
+   KR LABEL
 ================================================== */
 
 krLabel.addEventListener(
@@ -232,6 +214,10 @@ krLabel.addEventListener(
     changeLanguage("kr");
   },
 );
+
+/* ==================================================
+   EN LABEL
+================================================== */
 
 enLabel.addEventListener(
   "click",
@@ -385,7 +371,6 @@ function setupKorean(svg) {
 
     return {
       x: minX,
-
       width: maxX - minX,
     };
   }
@@ -725,7 +710,6 @@ async function loadEnglish(isLanguageSwitch = false) {
 
     const [odText, obText] = await Promise.all([
       odResponse.text(),
-
       obResponse.text(),
     ]);
 
