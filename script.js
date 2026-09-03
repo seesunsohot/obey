@@ -171,7 +171,7 @@ async function changeLanguage(language) {
 
   container.classList.add("language-out");
 
-  await wait(550);
+  await wait(200);
 
   activeLanguage = language;
 
@@ -197,7 +197,7 @@ async function changeLanguage(language) {
 
   container.classList.remove("language-in");
 
-  await wait(750);
+  await wait(250);
 
   languageChanging = false;
 }
