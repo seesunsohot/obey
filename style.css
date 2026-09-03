@@ -416,44 +416,38 @@ body {
     inset: auto;
 
     left: 0;
-    top: 50dvh;
+    top: 36dvh;
 
     width: 100%;
     height: auto;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
-    transform: translateY(-50%);
+    transform: none;
 
     overflow: visible;
   }
 
   #svg-container svg {
     width: auto !important;
-
     height: auto !important;
 
     max-width: 78vw !important;
-
     max-height: 36vh !important;
   }
 
   #controller {
     top: 10px;
-
     left: 10px;
   }
 
   .bg-video {
     left: 50%;
-
     bottom: 0;
 
     width: 100vw;
-
     height: auto;
 
     transform: translateX(-50%);
