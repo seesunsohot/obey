@@ -91,7 +91,7 @@ body {
     글자 위치
     이 값은 항상 유지
   */
-  transform: translateY(-370px);
+  transform: translateY(-170px);
 
   /*
     transform은 애니메이션 안 함
