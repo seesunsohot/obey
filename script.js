@@ -174,7 +174,7 @@ async function changeLanguage(language) {
     완전히 끝난 뒤 SVG 교체
   */
 
-  await wait(560);
+  await wait(600);
 
   activeLanguage = language;
 
@@ -233,7 +233,7 @@ async function changeLanguage(language) {
     등장 transition 끝날 때까지
   */
 
-  await wait(620);
+  await wait(800);
 
   languageChanging = false;
 }

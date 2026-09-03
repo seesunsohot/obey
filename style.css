@@ -93,12 +93,13 @@ body {
   transform: translateY(-160px);
 
   /*
-    나타날 때:
-    흐릿한 상태 → 서서히 선명
+    등장할 때
+    opacity도 천천히,
+    blur도 천천히 걷힘
   */
   transition:
-    opacity 0.28s ease,
-    filter 0.55s ease;
+    opacity 0.65s ease,
+    filter 0.75s ease;
 
   z-index: 1;
 
@@ -120,8 +121,8 @@ body {
 /* ==================================================
    LANGUAGE OUT
 
-   1. 먼저 blur가 퍼짐
-   2. opacity는 뒤늦게 사라짐
+   먼저 blur가 퍼지고
+   opacity는 조금 늦게 사라짐
 ================================================== */
 
 #svg-container.language-out {
@@ -137,11 +138,9 @@ body {
 /* ==================================================
    LANGUAGE IN
 
-   새 글자를
-   투명 + blur 상태로 먼저 배치
-
-   이후 JS에서 이 클래스를 제거하면
-   기본 transition으로 샤아아악 나타남
+   투명 + 강한 blur 상태로 시작
+   class가 제거되면서
+   기본 transition으로 천천히 등장
 ================================================== */
 
 #svg-container.language-in {
@@ -413,13 +412,6 @@ body {
 ================================================== */
 
 @media (max-width: 600px) {
-  /*
-    모바일은 데스크톱의 -160px을 사용하지 않음.
-
-    화면 높이의 60% 지점에
-    글자 중심을 배치.
-  */
-
   #svg-container {
     inset: auto;
 
