@@ -416,7 +416,7 @@ body {
     inset: auto;
 
     left: 0;
-    top: 32dvh;
+    top: 34dvh;
 
     width: 100%;
     height: auto;
@@ -427,7 +427,7 @@ body {
 
     transform: none;
 
-    overflow: visible;
+    overflow: visible !important;
   }
 
   #svg-container svg {
@@ -436,6 +436,8 @@ body {
 
     max-width: 78vw !important;
     max-height: 36vh !important;
+
+    overflow: visible !important;
   }
 
   #controller {
@@ -451,5 +453,31 @@ body {
     height: auto;
 
     transform: translateX(-50%);
+  }
+
+  /* 모바일에서는 개별 글자 blur 애니메이션 제거 */
+  #letter01,
+  #letter02,
+  #letter03,
+  #letter04,
+  #letter05,
+  #letter06,
+  .en-letter {
+    transition:
+      transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 1.45s ease !important;
+
+    will-change: transform, opacity;
+  }
+
+  /* JS에서 inline filter를 넣어도 모바일에서는 강제로 제거 */
+  #wordGroup #letter01,
+  #wordGroup #letter02,
+  #wordGroup #letter03,
+  #wordGroup #letter04,
+  #wordGroup #letter05,
+  #wordGroup #letter06,
+  #englishWordGroup .en-letter {
+    filter: none !important;
   }
 }
