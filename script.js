@@ -1,3 +1,7 @@
+/* ==================================================
+   ELEMENTS
+================================================== */
+
 const container = document.querySelector("#svg-container");
 
 const krLabel = document.querySelector("#kr-label");
@@ -138,6 +142,12 @@ function updateLanguageUI() {
 
 /* ==================================================
    LANGUAGE CHANGE
+
+   사라질 때:
+   선명 → blur → 마지막에 fade
+
+   나타날 때:
+   blur + 투명 → blur가 걷히며 fade in
 ================================================== */
 
 async function changeLanguage(language) {
@@ -151,14 +161,20 @@ async function changeLanguage(language) {
 
   languageChanging = true;
 
-  /*
-    위치 이동 없이
-    현재 자리에서 blur + fade
-  */
+  /* ================================================
+     OUT
+  ================================================ */
 
   container.classList.add("language-out");
 
-  await wait(300);
+  /*
+    filter 0.50초
+    opacity 딜레이 포함 약 0.52초
+
+    완전히 끝난 뒤 SVG 교체
+  */
+
+  await wait(560);
 
   activeLanguage = language;
 
@@ -170,10 +186,9 @@ async function changeLanguage(language) {
     enSwitch.classList.remove("is-on");
   }
 
-  /*
-    완전히 사라진 상태에서
-    SVG만 교체
-  */
+  /* ================================================
+     SVG CHANGE
+  ================================================ */
 
   if (language === "kr") {
     await loadKorean(true);
@@ -181,16 +196,32 @@ async function changeLanguage(language) {
     await loadEnglish(true);
   }
 
-  container.classList.remove("language-out");
+  /* ================================================
+     IN
 
-  /*
-    새 SVG도 동일 위치에서
-    blur 상태로 준비
-  */
+     새 SVG를 완전 투명 + blur 상태로 고정
+  ================================================ */
+
+  container.classList.remove("language-out");
 
   container.classList.add("language-in");
 
+  /*
+    브라우저가 language-in 상태를
+    실제 한 프레임으로 인식하도록 강제
+  */
+
   void container.offsetWidth;
+
+  /*
+    두 프레임 뒤 class 제거
+
+    그러면 CSS 기본 상태:
+      opacity 1
+      blur 0
+
+    로 transition 됨
+  */
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -198,7 +229,11 @@ async function changeLanguage(language) {
     });
   });
 
-  await wait(340);
+  /*
+    등장 transition 끝날 때까지
+  */
+
+  await wait(620);
 
   languageChanging = false;
 }
@@ -371,6 +406,7 @@ function setupKorean(svg) {
 
     return {
       x: minX,
+
       width: maxX - minX,
     };
   }
@@ -710,6 +746,7 @@ async function loadEnglish(isLanguageSwitch = false) {
 
     const [odText, obText] = await Promise.all([
       odResponse.text(),
+
       obResponse.text(),
     ]);
 

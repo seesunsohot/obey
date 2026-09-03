@@ -88,25 +88,27 @@ body {
   filter: blur(0px);
 
   /*
-    글자 전체 위치
+    데스크톱 글자 위치
   */
-  transform: translateY(50px);
+  transform: translateY(-160px);
 
   /*
-    blur가 먼저 길게 진행되고
-    opacity는 0.30초 뒤에 시작
+    나타날 때:
+    흐릿한 상태 → 서서히 선명
   */
   transition:
-    opacity 0.16s ease 0.3s,
-    filter 0.42s ease;
+    opacity 0.28s ease,
+    filter 0.55s ease;
 
   z-index: 1;
 
   pointer-events: none;
+
+  will-change: opacity, filter;
 }
 
 /* ==================================================
-   최초 로딩
+   INITIAL LOADING
 ================================================== */
 
 #svg-container.is-loading {
@@ -118,26 +120,34 @@ body {
 /* ==================================================
    LANGUAGE OUT
 
-   위치 이동 없음
-   blur 먼저 → 마지막에 opacity
+   1. 먼저 blur가 퍼짐
+   2. opacity는 뒤늦게 사라짐
 ================================================== */
 
 #svg-container.language-out {
   opacity: 0;
 
-  filter: blur(10px);
+  filter: blur(12px);
+
+  transition:
+    opacity 0.18s ease 0.34s,
+    filter 0.5s ease;
 }
 
 /* ==================================================
    LANGUAGE IN
 
-   같은 위치에서 blur 상태로 등장
+   새 글자를
+   투명 + blur 상태로 먼저 배치
+
+   이후 JS에서 이 클래스를 제거하면
+   기본 transition으로 샤아아악 나타남
 ================================================== */
 
 #svg-container.language-in {
   opacity: 0;
 
-  filter: blur(10px);
+  filter: blur(12px);
 
   transition: none;
 }
@@ -241,7 +251,7 @@ body {
 }
 
 /* ==================================================
-   TITLE
+   CONTROLLER TITLE
 ================================================== */
 
 .controller-title {
@@ -263,10 +273,11 @@ body {
   letter-spacing: -0.03em;
 
   user-select: none;
+  -webkit-user-select: none;
 }
 
 /* ==================================================
-   ROW
+   CONTROL ROW
 ================================================== */
 
 .control-row {
@@ -308,6 +319,7 @@ body {
   letter-spacing: -0.08em;
 
   user-select: none;
+  -webkit-user-select: none;
 
   pointer-events: auto;
 
@@ -401,16 +413,24 @@ body {
 ================================================== */
 
 @media (max-width: 600px) {
+  /*
+    모바일은 데스크톱의 -160px을 사용하지 않음.
+
+    화면 높이의 60% 지점에
+    글자 중심을 배치.
+  */
+
   #svg-container {
     inset: auto;
 
     left: 0;
-    top: 80dvh;
+    top: 60dvh;
 
     width: 100%;
     height: auto;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -421,22 +441,27 @@ body {
 
   #svg-container svg {
     width: auto !important;
+
     height: auto !important;
 
     max-width: 78vw !important;
+
     max-height: 36vh !important;
   }
 
   #controller {
     top: 10px;
+
     left: 10px;
   }
 
   .bg-video {
     left: 50%;
+
     bottom: 0;
 
     width: 100vw;
+
     height: auto;
 
     transform: translateX(-50%);
