@@ -90,7 +90,7 @@ body {
   /*
     글자 전체 위치
   */
-  transform: translateY(0px);
+  transform: translateY(50px);
 
   /*
     blur가 먼저 길게 진행되고
