@@ -91,14 +91,14 @@ body {
     글자 위치
     이 값은 항상 유지
   */
-  transform: translateY(-70px);
+  transform: translateY(-10px);
 
   /*
     transform은 애니메이션 안 함
   */
   transition:
-    opacity 0.16s ease,
-    filter 0.18s ease;
+    opacity 0.28s ease,
+    filter 0.42s ease;
 
   z-index: 1;
 
