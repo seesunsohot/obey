@@ -440,6 +440,11 @@ body {
     overflow: visible !important;
   }
 
+  #wordGroup,
+  #englishWordGroup {
+    overflow: visible !important;
+  }
+
   #controller {
     top: 10px;
     left: 10px;
@@ -468,6 +473,11 @@ body {
       opacity 1.45s ease !important;
 
     will-change: transform, opacity;
+
+    overflow: visible !important;
+
+    transform-box: fill-box;
+    transform-origin: center;
   }
 
   /* JS에서 inline filter를 넣어도 모바일에서는 강제로 제거 */

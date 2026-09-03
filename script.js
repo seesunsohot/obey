@@ -530,7 +530,7 @@ function showOdysseyInstant() {
 
   letter04.style.filter = "blur(10px)";
 
-  letter04.style.transform = "translateY(-150px) scale(0.97)";
+  letter04.style.transform = `translateY(${MOVE_UP_1}px) scale(0.97)`;
 
   letter05.style.opacity = "0";
 
