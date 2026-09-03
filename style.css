@@ -64,6 +64,10 @@ body {
 
 /* ==================================================
    SVG CONTAINER
+
+   ★ 위치는 여기서 딱 한 번만 설정
+   ★ language-out / language-in에서는
+     transform을 절대 건드리지 않음
 ================================================== */
 
 #svg-container {
@@ -88,22 +92,25 @@ body {
   filter: blur(0px);
 
   /*
-    글자 위치 고정
-    언어 전환 중에도 절대 변하지 않음
+    현재 글자 위치
+    계속 이 위치로 고정
   */
-  transform: translateY(-30px);
+  transform: translate3d(0, -370px, 0);
 
   /*
-    위치 애니메이션 없음
-    opacity + blur만 사용
+    중요:
+    transform transition 없음
+    opacity / blur만 움직임
   */
   transition:
-    opacity 0.2s ease,
-    filter 0.22s ease;
+    opacity 0.16s ease-out,
+    filter 0.18s ease-out;
 
   z-index: 1;
 
   pointer-events: none;
+
+  will-change: opacity, filter;
 }
 
 /* ==================================================
@@ -119,29 +126,26 @@ body {
 /* ==================================================
    LANGUAGE OUT
 
-   제자리에서 빠르게 블러되며 사라짐
+   위치 변화 없음
+   제자리에서 블러 + 페이드
 ================================================== */
 
 #svg-container.language-out {
   opacity: 0;
 
-  filter: blur(7px);
-
-  transform: translateY(-370px);
+  filter: blur(8px);
 }
 
 /* ==================================================
    LANGUAGE IN
 
-   새 글자도 정확히 같은 위치
+   이것도 위치 변화 없음
 ================================================== */
 
 #svg-container.language-in {
   opacity: 0;
 
-  filter: blur(7px);
-
-  transform: translateY(-370px);
+  filter: blur(8px);
 
   transition: none;
 }
@@ -321,7 +325,7 @@ body {
 
   opacity: 0.48;
 
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
 .mode-button.active-mode {
@@ -414,27 +418,22 @@ body {
 @media (max-width: 600px) {
   #svg-container svg {
     width: auto !important;
-
     height: auto !important;
 
     max-width: 78vw !important;
-
     max-height: 36vh !important;
   }
 
   #controller {
     top: 10px;
-
     left: 10px;
   }
 
   .bg-video {
     left: 50%;
-
     bottom: 0;
 
     width: 100vw;
-
     height: auto;
 
     transform: translateX(-50%);
