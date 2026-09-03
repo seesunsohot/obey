@@ -2,26 +2,53 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Odysseus</title>
 
-    <link
-      rel="stylesheet"
-      href="./style.css"
-    />
+    <link rel="stylesheet" href="./style.css" />
   </head>
 
   <body>
+    <!-- =========================================
+         BACKGROUND VIDEO : FORWARD
+    ========================================== -->
+
+    <video
+      id="bg-video-forward"
+      class="bg-video active"
+      autoplay
+      muted
+      playsinline
+      preload="auto"
+    >
+      <source src="./video/odysseus video.mp4" type="video/mp4" />
+    </video>
+
+    <!-- =========================================
+         BACKGROUND VIDEO : REVERSE
+    ========================================== -->
+
+    <video
+      id="bg-video-reverse"
+      class="bg-video"
+      muted
+      playsinline
+      preload="auto"
+    >
+      <source src="./video/odysseus reverse.mp4" type="video/mp4" />
+    </video>
+
+    <!-- =========================================
+         CONTROLLER
+    ========================================== -->
+
     <aside id="controller">
-      <div class="controller-title">
-        ODYSSEUS
-      </div>
+      <div class="controller-title">ODYSSEUS</div>
 
       <!-- KR -->
+
       <div class="control-row">
         <button
           class="control-label mode-button active-mode"
@@ -44,12 +71,9 @@
       </div>
 
       <!-- EN -->
+
       <div class="control-row">
-        <button
-          class="control-label mode-button"
-          id="en-label"
-          type="button"
-        >
+        <button class="control-label mode-button" id="en-label" type="button">
           EN
         </button>
 
@@ -66,10 +90,9 @@
       </div>
 
       <!-- MUSIC -->
+
       <div class="control-row">
-        <span class="control-label mu-label">
-          Mu
-        </span>
+        <span class="control-label mu-label"> Mu </span>
 
         <button
           class="switch-button"
@@ -84,17 +107,17 @@
       </div>
     </aside>
 
-    <main
-      id="svg-container"
-      class="is-loading"
-    ></main>
+    <!-- =========================================
+         LETTERING
+    ========================================== -->
 
-    <audio
-      id="music"
-      src="./audio/The Bow.mp3"
-      preload="auto"
-      loop
-    ></audio>
+    <main id="svg-container" class="is-loading"></main>
+
+    <!-- =========================================
+         MUSIC
+    ========================================== -->
+
+    <audio id="music" src="./audio/The Bow.mp3" preload="auto" loop></audio>
 
     <script src="./script.js"></script>
   </body>

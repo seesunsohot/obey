@@ -10,7 +10,7 @@ body {
   width: 100%;
   height: 100%;
 
-  background: #000 !important;
+  background: #000;
 
   overflow: hidden;
 }
@@ -20,19 +20,47 @@ body {
 
   min-height: 100%;
 
-  background: #000 !important;
+  background: #000;
 
-  font-family:
-    Futura,
-    Arial,
-    sans-serif;
+  font-family: Futura, Arial, sans-serif;
 
   touch-action: manipulation;
 
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* ==================================================
+   BACKGROUND VIDEO
+================================================== */
+
+.bg-video {
+  position: fixed;
+
+  left: 50%;
+  bottom: 0;
+
+  width: 100vw;
+  height: auto;
+
+  transform: translateX(-50%);
+
+  z-index: 0;
+
+  pointer-events: none;
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  opacity: 0;
+  visibility: hidden;
+
+  background: #000;
+}
+
+.bg-video.active {
+  opacity: 1;
+  visibility: visible;
+}
 
 /* ==================================================
    SVG CONTAINER
@@ -53,23 +81,24 @@ body {
 
   overflow: hidden;
 
-  background: #000;
+  background: transparent;
 
   opacity: 1;
 
   filter: blur(0px);
 
-  transform: translateY(0px);
+  /* 글자 전체 위치 */
+  transform: translateY(-170px);
 
   transition:
     opacity 0.55s ease,
     filter 0.65s ease,
-    transform 0.7s
-      cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 
   z-index: 1;
-}
 
+  pointer-events: none;
+}
 
 /* 최초 로딩 */
 
@@ -79,7 +108,6 @@ body {
   transition: none;
 }
 
-
 /* 언어 빠져나갈 때 */
 
 #svg-container.language-out {
@@ -87,10 +115,12 @@ body {
 
   filter: blur(7px);
 
-  transform:
-    translateY(-7px);
+  /*
+    기본 -370px에서
+    추가로 7px 위
+  */
+  transform: translateY(-377px);
 }
-
 
 /* 새 언어 들어올 때 */
 
@@ -99,18 +129,17 @@ body {
 
   filter: blur(7px);
 
-  transform:
-    translateY(7px);
+  /*
+    기본 -370px에서
+    7px 아래
+  */
+  transform: translateY(-363px);
 
   transition: none;
 }
 
-
 /* ==================================================
    SVG
-
-   중요한 부분:
-   화면 정중앙 + 크기 제한
 ================================================== */
 
 #svg-container svg {
@@ -132,7 +161,6 @@ body {
   flex: 0 0 auto;
 }
 
-
 /* ==================================================
    KR LETTERS
 ================================================== */
@@ -144,20 +172,15 @@ body {
 #letter05,
 #letter06 {
   transition:
-    transform 1.6s
-      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 1.45s ease,
     filter 1.45s ease;
 
   transform-box: fill-box;
   transform-origin: center;
 
-  will-change:
-    transform,
-    opacity,
-    filter;
+  will-change: transform, opacity, filter;
 }
-
 
 /* ==================================================
    EN LETTERS
@@ -165,20 +188,15 @@ body {
 
 .en-letter {
   transition:
-    transform 1.6s
-      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 1.45s ease,
     filter 1.45s ease;
 
   transform-box: fill-box;
   transform-origin: center;
 
-  will-change:
-    transform,
-    opacity,
-    filter;
+  will-change: transform, opacity, filter;
 }
-
 
 /* ==================================================
    WORD GROUP
@@ -186,13 +204,10 @@ body {
 
 #wordGroup,
 #englishWordGroup {
-  transition:
-    transform 1.6s
-      cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
 
   will-change: transform;
 }
-
 
 /* ==================================================
    CONTROLLER
@@ -216,12 +231,12 @@ body {
 
   touch-action: manipulation;
 
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
-
-/* TITLE */
+/* ==================================================
+   TITLE
+================================================== */
 
 .controller-title {
   height: 21px;
@@ -236,6 +251,7 @@ body {
   color: #969696;
 
   font-size: 8.5px;
+
   font-weight: 700;
 
   letter-spacing: -0.03em;
@@ -243,15 +259,15 @@ body {
   user-select: none;
 }
 
-
-/* ROW */
+/* ==================================================
+   ROW
+================================================== */
 
 .control-row {
   width: 100%;
   height: 32px;
 
-  padding:
-    0 8px;
+  padding: 0 8px;
 
   display: flex;
 
@@ -261,8 +277,9 @@ body {
   background: #919191;
 }
 
-
-/* LABEL */
+/* ==================================================
+   LABEL
+================================================== */
 
 .control-label {
   margin: 0;
@@ -277,6 +294,7 @@ body {
   font-family: inherit;
 
   font-size: 15px;
+
   font-weight: 500;
 
   line-height: 1;
@@ -287,33 +305,27 @@ body {
 
   touch-action: manipulation;
 
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
-
 
 .mode-button {
   cursor: pointer;
 
   opacity: 0.48;
 
-  transition:
-    opacity 0.3s ease;
+  transition: opacity 0.3s ease;
 }
-
 
 .mode-button.active-mode {
   opacity: 1;
 }
 
-
 .mu-label {
   font-size: 13px;
 }
 
-
 /* ==================================================
-   SWITCH
+   SWITCH BUTTON
 ================================================== */
 
 .switch-button {
@@ -330,10 +342,8 @@ body {
 
   touch-action: manipulation;
 
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
-
 
 /* 실제 터치 영역 */
 
@@ -348,6 +358,9 @@ body {
   left: -7px;
 }
 
+/* ==================================================
+   SWITCH
+================================================== */
 
 .switch {
   position: relative;
@@ -364,7 +377,6 @@ body {
   pointer-events: none;
 }
 
-
 .switch-knob {
   position: absolute;
 
@@ -378,27 +390,20 @@ body {
 
   background: #919191;
 
-  transition:
-    transform 1.15s
-      cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
 
   pointer-events: none;
 }
 
-
-.switch-button.is-on
-.switch-knob {
-  transform:
-    translateX(22px);
+.switch-button.is-on .switch-knob {
+  transform: translateX(22px);
 }
-
 
 /* ==================================================
    MOBILE
 ================================================== */
 
 @media (max-width: 600px) {
-
   #svg-container svg {
     width: auto !important;
     height: auto !important;
@@ -412,4 +417,13 @@ body {
     left: 10px;
   }
 
+  .bg-video {
+    left: 50%;
+    bottom: 0;
+
+    width: 100vw;
+    height: auto;
+
+    transform: translateX(-50%);
+  }
 }
