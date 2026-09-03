@@ -63,14 +63,13 @@ body {
 }
 
 /* ==================================================
-   SVG CONTAINER
+   SVG STAGE
 
-   ★ 위치는 여기서 딱 한 번만 설정
-   ★ language-out / language-in에서는
-     transform을 절대 건드리지 않음
+   ★ 위치는 여기서만 결정
+   ★ 이 요소는 절대 애니메이션하지 않음
 ================================================== */
 
-#svg-container {
+#svg-stage {
   position: fixed;
 
   inset: 0;
@@ -83,6 +82,31 @@ body {
   align-items: center;
   justify-content: center;
 
+  transform: translate3d(0, -370px, 0);
+
+  z-index: 1;
+
+  pointer-events: none;
+}
+
+/* ==================================================
+   SVG CONTAINER
+
+   ★ 위치 관련 transform 없음
+   ★ blur + opacity만 애니메이션
+================================================== */
+
+#svg-container {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
   overflow: hidden;
 
   background: transparent;
@@ -92,21 +116,13 @@ body {
   filter: blur(0px);
 
   /*
-    현재 글자 위치
-    계속 이 위치로 고정
-  */
-  transform: translate3d(0, -370px, 0);
-
-  /*
     중요:
-    transform transition 없음
-    opacity / blur만 움직임
+    transform 없음
   */
-  transition:
-    opacity 0.16s ease-out,
-    filter 0.18s ease-out;
 
-  z-index: 1;
+  transition:
+    opacity 0.14s ease-out,
+    filter 0.17s ease-out;
 
   pointer-events: none;
 
@@ -126,8 +142,7 @@ body {
 /* ==================================================
    LANGUAGE OUT
 
-   위치 변화 없음
-   제자리에서 블러 + 페이드
+   제자리에서 blur + fade
 ================================================== */
 
 #svg-container.language-out {
@@ -139,7 +154,7 @@ body {
 /* ==================================================
    LANGUAGE IN
 
-   이것도 위치 변화 없음
+   똑같은 자리에서 등장
 ================================================== */
 
 #svg-container.language-in {
@@ -241,6 +256,11 @@ body {
 
   background: #919191;
 
+  /*
+    모바일 터치
+  */
+  pointer-events: auto;
+
   touch-action: manipulation;
 
   -webkit-tap-highlight-color: transparent;
@@ -287,6 +307,8 @@ body {
   justify-content: space-between;
 
   background: #919191;
+
+  pointer-events: auto;
 }
 
 /* ==================================================
@@ -314,8 +336,11 @@ body {
   letter-spacing: -0.08em;
 
   user-select: none;
+  -webkit-user-select: none;
 
   touch-action: manipulation;
+
+  pointer-events: auto;
 
   -webkit-tap-highlight-color: transparent;
 }
@@ -325,7 +350,7 @@ body {
 
   opacity: 0.48;
 
-  transition: opacity 0.2s ease;
+  transition: opacity 0.18s ease;
 }
 
 .mode-button.active-mode {
@@ -352,22 +377,29 @@ body {
 
   cursor: pointer;
 
+  pointer-events: auto;
+
   touch-action: manipulation;
 
   -webkit-tap-highlight-color: transparent;
+
+  /*
+    모바일에서 실제 버튼 면적 확보
+  */
+  min-width: 41px;
+  min-height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
 }
 
-/* 실제 터치 영역 */
+/* 기존 ::before 터치영역 제거
+   모바일에서 겹치는 문제 방지 */
 
 .switch-button::before {
-  content: "";
-
-  position: absolute;
-
-  top: -7px;
-  right: -7px;
-  bottom: -7px;
-  left: -7px;
+  content: none;
 }
 
 /* ==================================================
@@ -381,6 +413,8 @@ body {
 
   width: 41px;
   height: 19px;
+
+  flex: 0 0 auto;
 
   border-radius: 999px;
 
@@ -402,7 +436,7 @@ body {
 
   background: #919191;
 
-  transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 
   pointer-events: none;
 }
@@ -416,17 +450,32 @@ body {
 ================================================== */
 
 @media (max-width: 600px) {
+  #svg-stage {
+    /*
+      현재와 같은 글자 위치 유지.
+      모바일에서 너무 위면 여기만 바꾸면 됨.
+    */
+    transform: translate3d(0, -370px, 0);
+  }
+
   #svg-container svg {
     width: auto !important;
+
     height: auto !important;
 
     max-width: 78vw !important;
+
     max-height: 36vh !important;
   }
 
   #controller {
     top: 10px;
     left: 10px;
+  }
+
+  .switch-button {
+    min-width: 41px;
+    min-height: 32px;
   }
 
   .bg-video {
