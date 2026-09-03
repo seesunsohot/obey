@@ -402,7 +402,21 @@ body {
 
 @media (max-width: 600px) {
   #svg-container {
-    transform: translateY(80px);
+    inset: auto;
+
+    left: 0;
+    top: 56dvh;
+
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform: translateY(-50%);
+
+    overflow: visible;
   }
 
   #svg-container svg {
