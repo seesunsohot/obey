@@ -401,29 +401,28 @@ body {
 ================================================== */
 
 @media (max-width: 600px) {
+  #svg-container {
+    transform: translateY(80px);
+  }
+
   #svg-container svg {
     width: auto !important;
-
     height: auto !important;
 
     max-width: 78vw !important;
-
     max-height: 36vh !important;
   }
 
   #controller {
     top: 10px;
-
     left: 10px;
   }
 
   .bg-video {
     left: 50%;
-
     bottom: 0;
 
     width: 100vw;
-
     height: auto;
 
     transform: translateX(-50%);
