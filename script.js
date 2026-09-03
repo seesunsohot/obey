@@ -17,6 +17,27 @@ const musicSwitch = document.querySelector("#music-switch");
 const music = document.querySelector("#music");
 
 /* ==================================================
+   MOBILE CHECK
+================================================== */
+
+const isMobile = window.matchMedia("(max-width: 600px)").matches;
+
+/*
+  데스크톱은 기존 이동거리 유지
+
+  모바일에서는 SVG 바깥으로
+  너무 멀리 움직이지 않도록 줄임
+*/
+
+const MOVE_UP_1 = isMobile ? -55 : -150;
+
+const MOVE_UP_2 = isMobile ? -65 : -170;
+
+const MOVE_DOWN_1 = isMobile ? 55 : 150;
+
+const MOVE_DOWN_2 = isMobile ? 65 : 160;
+
+/* ==================================================
    BACKGROUND VIDEO
 ================================================== */
 
@@ -142,12 +163,6 @@ function updateLanguageUI() {
 
 /* ==================================================
    LANGUAGE CHANGE
-
-   사라질 때:
-   선명 → blur → 마지막에 fade
-
-   나타날 때:
-   blur + 투명 → blur가 걷히며 fade in
 ================================================== */
 
 async function changeLanguage(language) {
@@ -161,20 +176,13 @@ async function changeLanguage(language) {
 
   languageChanging = true;
 
-  /* ================================================
+  /* ==============================
      OUT
-  ================================================ */
+  ============================== */
 
   container.classList.add("language-out");
 
-  /*
-    filter 0.50초
-    opacity 딜레이 포함 약 0.52초
-
-    완전히 끝난 뒤 SVG 교체
-  */
-
-  await wait(600);
+  await wait(560);
 
   activeLanguage = language;
 
@@ -186,9 +194,9 @@ async function changeLanguage(language) {
     enSwitch.classList.remove("is-on");
   }
 
-  /* ================================================
+  /* ==============================
      SVG CHANGE
-  ================================================ */
+  ============================== */
 
   if (language === "kr") {
     await loadKorean(true);
@@ -196,32 +204,20 @@ async function changeLanguage(language) {
     await loadEnglish(true);
   }
 
-  /* ================================================
+  /* ==============================
      IN
-
-     새 SVG를 완전 투명 + blur 상태로 고정
-  ================================================ */
+  ============================== */
 
   container.classList.remove("language-out");
 
   container.classList.add("language-in");
 
   /*
-    브라우저가 language-in 상태를
-    실제 한 프레임으로 인식하도록 강제
+    현재 blur + opacity 0
+    상태를 브라우저에 확정
   */
 
   void container.offsetWidth;
-
-  /*
-    두 프레임 뒤 class 제거
-
-    그러면 CSS 기본 상태:
-      opacity 1
-      blur 0
-
-    로 transition 됨
-  */
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -229,17 +225,13 @@ async function changeLanguage(language) {
     });
   });
 
-  /*
-    등장 transition 끝날 때까지
-  */
-
-  await wait(800);
+  await wait(1200);
 
   languageChanging = false;
 }
 
 /* ==================================================
-   KR LABEL
+   LANGUAGE BUTTONS
 ================================================== */
 
 krLabel.addEventListener(
@@ -249,10 +241,6 @@ krLabel.addEventListener(
     changeLanguage("kr");
   },
 );
-
-/* ==================================================
-   EN LABEL
-================================================== */
 
 enLabel.addEventListener(
   "click",
@@ -481,11 +469,20 @@ function restoreKoreanTransitions() {
 
   const { letter04, letter05, letter06, wordGroup } = koreanData;
 
-  const transition = `
-      transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 1.45s ease,
-      filter 1.45s ease
-    `;
+  /*
+    모바일은 filter transition 제거
+  */
+
+  const transition = isMobile
+    ? `
+          transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 1.45s ease
+        `
+    : `
+          transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 1.45s ease,
+          filter 1.45s ease
+        `;
 
   letter04.style.transition = transition;
 
@@ -528,21 +525,21 @@ function showOdysseyInstant() {
 
   letter04.style.opacity = "0";
 
-  letter04.style.filter = "blur(10px)";
+  letter04.style.filter = isMobile ? "none" : "blur(10px)";
 
   letter04.style.transform = `translateY(${MOVE_UP_1}px) scale(0.97)`;
 
   letter05.style.opacity = "0";
 
-  letter05.style.filter = "blur(10px)";
+  letter05.style.filter = isMobile ? "none" : "blur(10px)";
 
-  letter05.style.transform = "translateY(-170px) scale(0.97)";
+  letter05.style.transform = `translateY(${MOVE_UP_2}px) scale(0.97)`;
 
   letter06.style.visibility = "visible";
 
   letter06.style.opacity = "1";
 
-  letter06.style.filter = "blur(0px)";
+  letter06.style.filter = "none";
 
   letter06.style.transform = `translate(
       ${iFinalX}px,
@@ -594,23 +591,23 @@ function showOdysseusInstant() {
 
   letter04.style.opacity = "1";
 
-  letter04.style.filter = "blur(0px)";
+  letter04.style.filter = "none";
 
   letter04.style.transform = "translateY(0px) scale(1)";
 
   letter05.style.opacity = "1";
 
-  letter05.style.filter = "blur(0px)";
+  letter05.style.filter = "none";
 
   letter05.style.transform = "translateY(0px) scale(1)";
 
   letter06.style.opacity = "0";
 
-  letter06.style.filter = "blur(8px)";
+  letter06.style.filter = isMobile ? "none" : "blur(8px)";
 
   letter06.style.transform = `translate(
       ${iFinalX}px,
-      ${iFinalY + 150}px
+      ${iFinalY + MOVE_DOWN_1}px
     )`;
 
   wordGroup.style.transform = `translateX(
@@ -662,19 +659,19 @@ function toggleKorean() {
 
     letter06.style.transform = `translate(
         ${iFinalX}px,
-        ${iFinalY + 150}px
+        ${iFinalY + MOVE_DOWN_1}px
       )`;
 
     letter06.style.opacity = "0";
 
-    letter06.style.filter = "blur(8px)";
+    letter06.style.filter = isMobile ? "none" : "blur(8px)";
 
     setTimeout(() => {
       letter04.style.transform = "translateY(0px) scale(1)";
 
       letter04.style.opacity = "1";
 
-      letter04.style.filter = "blur(0px)";
+      letter04.style.filter = "none";
     }, 220);
 
     setTimeout(() => {
@@ -682,7 +679,7 @@ function toggleKorean() {
 
       letter05.style.opacity = "1";
 
-      letter05.style.filter = "blur(0px)";
+      letter05.style.filter = "none";
     }, 320);
   } else {
     koreanMode = "odyssey";
@@ -693,18 +690,18 @@ function toggleKorean() {
         ${odysseyShift}px
       )`;
 
-    letter04.style.transform = "translateY(-150px) scale(0.97)";
+    letter04.style.transform = `translateY(${MOVE_UP_1}px) scale(0.97)`;
 
     letter04.style.opacity = "0";
 
-    letter04.style.filter = "blur(10px)";
+    letter04.style.filter = isMobile ? "none" : "blur(10px)";
 
     setTimeout(() => {
-      letter05.style.transform = "translateY(-170px) scale(0.97)";
+      letter05.style.transform = `translateY(${MOVE_UP_2}px) scale(0.97)`;
 
       letter05.style.opacity = "0";
 
-      letter05.style.filter = "blur(10px)";
+      letter05.style.filter = isMobile ? "none" : "blur(10px)";
     }, 90);
 
     setTimeout(() => {
@@ -715,7 +712,7 @@ function toggleKorean() {
 
       letter06.style.opacity = "1";
 
-      letter06.style.filter = "blur(0px)";
+      letter06.style.filter = "none";
     }, 310);
   }
 
@@ -966,11 +963,16 @@ function restoreEnglishTransitions() {
     return;
   }
 
-  const transition = `
-      transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 1.45s ease,
-      filter 1.45s ease
-    `;
+  const transition = isMobile
+    ? `
+          transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 1.45s ease
+        `
+    : `
+          transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 1.45s ease,
+          filter 1.45s ease
+        `;
 
   const { O, D, Y, S, S2, E, U, S1, B } = englishData;
 
@@ -1012,18 +1014,18 @@ function showEnglishOdysseusInstant() {
   [O, D, Y, S, S2, E, U, S1].forEach((letter) => {
     letter.style.opacity = "1";
 
-    letter.style.filter = "blur(0px)";
+    letter.style.filter = "none";
 
     letter.style.transform = "translate(0px, 0px)";
   });
 
   B.style.opacity = "0";
 
-  B.style.filter = "blur(10px)";
+  B.style.filter = isMobile ? "none" : "blur(10px)";
 
   B.style.transform = `translate(
       ${targetBX}px,
-      ${targetBY + 120}px
+      ${targetBY + MOVE_DOWN_1}px
     )`;
 
   englishMode = "odysseus";
@@ -1092,40 +1094,40 @@ function toggleEnglish() {
         ${targetYY}px
       )`;
 
-    D.style.transform = "translateY(-140px)";
+    D.style.transform = `translateY(${MOVE_UP_1}px)`;
 
     D.style.opacity = "0";
 
-    D.style.filter = "blur(10px)";
+    D.style.filter = isMobile ? "none" : "blur(10px)";
 
-    S.style.transform = "translateY(150px)";
+    S.style.transform = `translateY(${MOVE_DOWN_1}px)`;
 
     S.style.opacity = "0";
 
-    S.style.filter = "blur(10px)";
+    S.style.filter = isMobile ? "none" : "blur(10px)";
 
     setTimeout(() => {
-      S2.style.transform = "translateY(-150px)";
+      S2.style.transform = `translateY(${MOVE_UP_1}px)`;
 
       S2.style.opacity = "0";
 
-      S2.style.filter = "blur(10px)";
+      S2.style.filter = isMobile ? "none" : "blur(10px)";
     }, 70);
 
     setTimeout(() => {
-      U.style.transform = "translateY(160px)";
+      U.style.transform = `translateY(${MOVE_DOWN_2}px)`;
 
       U.style.opacity = "0";
 
-      U.style.filter = "blur(10px)";
+      U.style.filter = isMobile ? "none" : "blur(10px)";
     }, 130);
 
     setTimeout(() => {
-      S1.style.transform = "translateY(-160px)";
+      S1.style.transform = `translateY(${MOVE_UP_2}px)`;
 
       S1.style.opacity = "0";
 
-      S1.style.filter = "blur(10px)";
+      S1.style.filter = isMobile ? "none" : "blur(10px)";
     }, 190);
 
     setTimeout(() => {
@@ -1136,7 +1138,7 @@ function toggleEnglish() {
 
       B.style.opacity = "1";
 
-      B.style.filter = "blur(0px)";
+      B.style.filter = "none";
     }, 300);
   } else {
     englishMode = "odysseus";
@@ -1145,12 +1147,12 @@ function toggleEnglish() {
 
     B.style.transform = `translate(
         ${targetBX}px,
-        ${targetBY + 120}px
+        ${targetBY + MOVE_DOWN_1}px
       )`;
 
     B.style.opacity = "0";
 
-    B.style.filter = "blur(10px)";
+    B.style.filter = isMobile ? "none" : "blur(10px)";
 
     O.style.transform = "translate(0px, 0px)";
 
@@ -1163,7 +1165,7 @@ function toggleEnglish() {
 
       D.style.opacity = "1";
 
-      D.style.filter = "blur(0px)";
+      D.style.filter = "none";
     }, 180);
 
     setTimeout(() => {
@@ -1171,7 +1173,7 @@ function toggleEnglish() {
 
       S.style.opacity = "1";
 
-      S.style.filter = "blur(0px)";
+      S.style.filter = "none";
     }, 230);
 
     setTimeout(() => {
@@ -1179,7 +1181,7 @@ function toggleEnglish() {
 
       S2.style.opacity = "1";
 
-      S2.style.filter = "blur(0px)";
+      S2.style.filter = "none";
     }, 280);
 
     setTimeout(() => {
@@ -1187,7 +1189,7 @@ function toggleEnglish() {
 
       U.style.opacity = "1";
 
-      U.style.filter = "blur(0px)";
+      U.style.filter = "none";
     }, 330);
 
     setTimeout(() => {
@@ -1195,7 +1197,7 @@ function toggleEnglish() {
 
       S1.style.opacity = "1";
 
-      S1.style.filter = "blur(0px)";
+      S1.style.filter = "none";
     }, 380);
   }
 
