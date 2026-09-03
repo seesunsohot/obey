@@ -88,24 +88,27 @@ body {
   filter: blur(0px);
 
   /*
-    현재 글자 전체 위치
+    글자 위치 고정
+    언어 전환 중에도 절대 변하지 않음
   */
-  transform: translateY(-370px);
+  transform: translateY(-30px);
 
   /*
-    언어 전환 속도 빠르게
+    위치 애니메이션 없음
+    opacity + blur만 사용
   */
   transition:
-    opacity 0.28s ease,
-    filter 0.32s ease,
-    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.2s ease,
+    filter 0.22s ease;
 
   z-index: 1;
 
   pointer-events: none;
 }
 
-/* 최초 로딩 */
+/* ==================================================
+   최초 로딩
+================================================== */
 
 #svg-container.is-loading {
   opacity: 0;
@@ -116,30 +119,29 @@ body {
 /* ==================================================
    LANGUAGE OUT
 
-   기존처럼 크게 위로 올라가지 않고
-   2px만 움직이게
+   제자리에서 빠르게 블러되며 사라짐
 ================================================== */
 
 #svg-container.language-out {
   opacity: 0;
 
-  filter: blur(4px);
+  filter: blur(7px);
 
-  transform: translateY(-372px);
+  transform: translateY(-370px);
 }
 
 /* ==================================================
    LANGUAGE IN
 
-   아래 2px에서 들어오도록
+   새 글자도 정확히 같은 위치
 ================================================== */
 
 #svg-container.language-in {
   opacity: 0;
 
-  filter: blur(4px);
+  filter: blur(7px);
 
-  transform: translateY(-368px);
+  transform: translateY(-370px);
 
   transition: none;
 }
