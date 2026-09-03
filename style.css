@@ -88,16 +88,16 @@ body {
   filter: blur(0px);
 
   /*
-    글자 위치
-    이 값은 항상 유지
+    글자 전체 위치
   */
-  transform: translateY(-10px);
+  transform: translateY(-160px);
 
   /*
-    transform은 애니메이션 안 함
+    blur가 먼저 길게 진행되고
+    opacity는 0.30초 뒤에 시작
   */
   transition:
-    opacity 0.28s ease,
+    opacity 0.16s ease 0.3s,
     filter 0.42s ease;
 
   z-index: 1;
@@ -105,7 +105,9 @@ body {
   pointer-events: none;
 }
 
-/* 최초 로딩 */
+/* ==================================================
+   최초 로딩
+================================================== */
 
 #svg-container.is-loading {
   opacity: 0;
@@ -113,20 +115,29 @@ body {
   transition: none;
 }
 
-/* 언어 사라질 때 */
+/* ==================================================
+   LANGUAGE OUT
+
+   위치 이동 없음
+   blur 먼저 → 마지막에 opacity
+================================================== */
 
 #svg-container.language-out {
   opacity: 0;
 
-  filter: blur(8px);
+  filter: blur(10px);
 }
 
-/* 언어 들어올 때 */
+/* ==================================================
+   LANGUAGE IN
+
+   같은 위치에서 blur 상태로 등장
+================================================== */
 
 #svg-container.language-in {
   opacity: 0;
 
-  filter: blur(8px);
+  filter: blur(10px);
 
   transition: none;
 }
@@ -229,6 +240,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ==================================================
+   TITLE
+================================================== */
+
 .controller-title {
   height: 21px;
 
@@ -318,7 +333,7 @@ body {
 }
 
 /* ==================================================
-   SWITCH
+   SWITCH BUTTON
 ================================================== */
 
 .switch-button {
@@ -339,6 +354,10 @@ body {
 
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ==================================================
+   SWITCH
+================================================== */
 
 .switch {
   position: relative;
