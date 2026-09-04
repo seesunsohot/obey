@@ -475,7 +475,7 @@ body {
   ================================================== */
 
   #svg-container svg:has(#englishWordGroup) {
-    margin-top: -10vw;
+    margin-top: -5vw;
   }
 
 
