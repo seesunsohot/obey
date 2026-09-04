@@ -1076,32 +1076,24 @@ function toggleEnglish() {
     ========================================== */
 
     D.style.transform = isMobile
-      ? "translateY(0px)"
+      ? "translate(0px, 0px)"
       : `translateY(${MOVE_UP_1}px)`;
 
     D.style.opacity = "0";
 
     D.style.filter = isMobile ? "none" : "blur(10px)";
 
-    /*
-      S는 아래로 내려가는 글자라
-      기존 모션 유지
-    */
-
-    S.style.transform = `translateY(${MOVE_DOWN_1}px)`;
+    S.style.transform = isMobile
+      ? "translate(0px, 0px)"
+      : `translateY(${MOVE_DOWN_1}px)`;
 
     S.style.opacity = "0";
 
     S.style.filter = isMobile ? "none" : "blur(10px)";
 
     setTimeout(() => {
-      /*
-          S2도 모바일에서는
-          위로 안 올라감
-        */
-
       S2.style.transform = isMobile
-        ? "translateY(0px)"
+        ? "translate(0px, 0px)"
         : `translateY(${MOVE_UP_1}px)`;
 
       S2.style.opacity = "0";
@@ -1110,11 +1102,9 @@ function toggleEnglish() {
     }, 70);
 
     setTimeout(() => {
-      /*
-          U는 아래로 내려가므로 유지
-        */
-
-      U.style.transform = `translateY(${MOVE_DOWN_2}px)`;
+      U.style.transform = isMobile
+        ? "translate(0px, 0px)"
+        : `translateY(${MOVE_DOWN_2}px)`;
 
       U.style.opacity = "0";
 
@@ -1122,13 +1112,8 @@ function toggleEnglish() {
     }, 130);
 
     setTimeout(() => {
-      /*
-          S1도 모바일에서는
-          위로 안 올라감
-        */
-
       S1.style.transform = isMobile
-        ? "translateY(0px)"
+        ? "translate(0px, 0px)"
         : `translateY(${MOVE_UP_2}px)`;
 
       S1.style.opacity = "0";

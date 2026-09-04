@@ -1,3 +1,7 @@
+/* ==================================================
+   RESET
+================================================== */
+
 * {
   box-sizing: border-box;
 }
@@ -87,15 +91,8 @@ body {
 
   filter: blur(0px);
 
-  /*
-    데스크톱 글자 위치
-  */
   transform: translateY(-160px);
 
-  /*
-    등장할 때
-    천천히 opacity + blur
-  */
   transition:
     opacity 1.1s ease,
     filter 0.85s ease;
@@ -108,7 +105,7 @@ body {
 }
 
 /* ==================================================
-   INITIAL LOADING
+   INITIAL LOAD
 ================================================== */
 
 #svg-container.is-loading {
@@ -126,10 +123,6 @@ body {
 
   filter: blur(12px);
 
-  /*
-    먼저 blur
-    opacity는 뒤늦게 사라짐
-  */
   transition:
     opacity 0.18s ease 0.34s,
     filter 0.5s ease;
@@ -208,7 +201,7 @@ body {
 }
 
 /* ==================================================
-   GROUP
+   WORD GROUPS
 ================================================== */
 
 #wordGroup,
@@ -248,7 +241,7 @@ body {
 }
 
 /* ==================================================
-   TITLE
+   CONTROLLER TITLE
 ================================================== */
 
 .controller-title {
@@ -279,6 +272,7 @@ body {
 
 .control-row {
   width: 100%;
+
   height: 32px;
 
   padding: 0 8px;
@@ -325,6 +319,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ==================================================
+   LANGUAGE BUTTON
+================================================== */
+
 .mode-button {
   cursor: pointer;
 
@@ -336,6 +334,10 @@ body {
 .mode-button.active-mode {
   opacity: 1;
 }
+
+/* ==================================================
+   MUSIC LABEL
+================================================== */
 
 .mu-label {
   font-size: 13px;
@@ -383,6 +385,10 @@ body {
   pointer-events: none;
 }
 
+/* ==================================================
+   SWITCH KNOB
+================================================== */
+
 .switch-knob {
   position: absolute;
 
@@ -410,14 +416,20 @@ body {
 ================================================== */
 
 @media (max-width: 600px) {
+  /* ================================================
+     SVG CONTAINER
+  ================================================= */
+
   #svg-container {
     position: fixed;
+
     inset: 0;
 
     width: 100%;
     height: 100%;
 
     display: flex;
+
     align-items: flex-start;
     justify-content: center;
 
@@ -428,7 +440,13 @@ body {
     overflow: visible !important;
   }
 
+  /* ================================================
+     SVG SIZE
+  ================================================= */
+
   #svg-container svg {
+    display: block;
+
     width: auto !important;
     height: auto !important;
 
@@ -438,29 +456,93 @@ body {
     overflow: visible !important;
   }
 
-  #wordGroup,
+  /* ================================================
+     KR GROUP
+  ================================================= */
+
+  #wordGroup {
+    overflow: visible !important;
+  }
+
+  /* ================================================
+     EN GROUP
+  ================================================= */
+
   #englishWordGroup {
     overflow: visible !important;
   }
+
+  /* ================================================
+     KR LETTERS
+
+     한글 모션은 기존 그대로 유지
+  ================================================= */
+
+  #letter01,
+  #letter02,
+  #letter03,
+  #letter04,
+  #letter05,
+  #letter06 {
+    transition:
+      transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 1.45s ease !important;
+
+    transform-box: fill-box;
+
+    transform-origin: center;
+
+    filter: none !important;
+
+    overflow: visible !important;
+
+    will-change: transform, opacity;
+  }
+
+  /* ================================================
+     EN LETTERS
+
+     중요:
+     모바일에서는 transform transition 제거.
+
+     JS에서 translate(0, 0)으로 지정된
+     사라지는 글자는 제자리에서 opacity만 줄어듦.
+  ================================================= */
+
+  .en-letter {
+    transition: opacity 1.2s ease !important;
+
+    filter: none !important;
+
+    overflow: visible !important;
+
+    will-change: opacity;
+  }
+
+  /* ================================================
+     CONTROLLER
+  ================================================= */
 
   #controller {
     top: 10px;
     left: 10px;
   }
 
-  .bg-video {
-    position: fixed;
+  /* ================================================
+     VIDEO
 
+     모바일에서는 translateX 제거
+  ================================================= */
+
+  .bg-video {
     left: 0;
     right: auto;
+
     bottom: 0;
 
     width: 100vw;
     height: auto;
 
-    /* 중요 */
     transform: none !important;
-
-    pointer-events: none;
   }
 }
