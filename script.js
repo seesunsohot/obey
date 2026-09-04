@@ -2,117 +2,220 @@
    ELEMENTS
 ================================================== */
 
-const container = document.querySelector("#svg-container");
+const container =
+  document.querySelector("#svg-container");
 
-const krLabel = document.querySelector("#kr-label");
+const krLabel =
+  document.querySelector("#kr-label");
 
-const enLabel = document.querySelector("#en-label");
+const enLabel =
+  document.querySelector("#en-label");
 
-const krSwitch = document.querySelector("#kr-switch");
+const krSwitch =
+  document.querySelector("#kr-switch");
 
-const enSwitch = document.querySelector("#en-switch");
+const enSwitch =
+  document.querySelector("#en-switch");
 
-const musicSwitch = document.querySelector("#music-switch");
+const musicSwitch =
+  document.querySelector("#music-switch");
 
-const music = document.querySelector("#music");
+const music =
+  document.querySelector("#music");
+
 
 /* ==================================================
    MOBILE CHECK
 ================================================== */
 
-const isMobile = window.matchMedia("(max-width: 600px)").matches;
+const isMobile =
+  window.matchMedia(
+    "(max-width: 600px)"
+  ).matches;
 
-/* ==================================================
-   MOVEMENT
-================================================== */
-
-const MOVE_UP_1 = isMobile ? -55 : -150;
-
-const MOVE_UP_2 = isMobile ? -65 : -170;
-
-const MOVE_DOWN_1 = isMobile ? 55 : 150;
-
-const MOVE_DOWN_2 = isMobile ? 65 : 160;
 
 /* ==================================================
    BACKGROUND VIDEO
 ================================================== */
 
-const forwardVideo = document.querySelector("#bg-video-forward");
+const forwardVideo =
+  document.querySelector(
+    "#bg-video-forward"
+  );
 
-const reverseVideo = document.querySelector("#bg-video-reverse");
+const reverseVideo =
+  document.querySelector(
+    "#bg-video-reverse"
+  );
+
 
 function playForwardVideo() {
+
   reverseVideo.pause();
 
   reverseVideo.currentTime = 0;
 
-  reverseVideo.classList.remove("active");
+  reverseVideo.classList.remove(
+    "active"
+  );
+
 
   forwardVideo.currentTime = 0;
 
-  forwardVideo.classList.add("active");
+  forwardVideo.classList.add(
+    "active"
+  );
 
-  forwardVideo.play().catch((error) => {
-    console.error("정방향 배경 영상 재생 실패:", error);
-  });
+
+  forwardVideo
+    .play()
+    .catch((error) => {
+
+      console.error(
+        "정방향 배경 영상 재생 실패:",
+        error
+      );
+
+    });
+
 }
 
+
 function playReverseVideo() {
+
   forwardVideo.pause();
 
   forwardVideo.currentTime = 0;
 
-  forwardVideo.classList.remove("active");
+  forwardVideo.classList.remove(
+    "active"
+  );
+
 
   reverseVideo.currentTime = 0;
 
-  reverseVideo.classList.add("active");
+  reverseVideo.classList.add(
+    "active"
+  );
 
-  reverseVideo.play().catch((error) => {
-    console.error("리버스 배경 영상 재생 실패:", error);
-  });
+
+  reverseVideo
+    .play()
+    .catch((error) => {
+
+      console.error(
+        "리버스 배경 영상 재생 실패:",
+        error
+      );
+
+    });
+
 }
 
-forwardVideo.addEventListener("ended", () => {
-  playReverseVideo();
-});
 
-reverseVideo.addEventListener("ended", () => {
-  playForwardVideo();
-});
+forwardVideo.addEventListener(
+  "ended",
+  () => {
+
+    playReverseVideo();
+
+  }
+);
+
+
+reverseVideo.addEventListener(
+  "ended",
+  () => {
+
+    playForwardVideo();
+
+  }
+);
+
 
 /* ==================================================
    STATE
 ================================================== */
 
-let activeLanguage = "kr";
+let activeLanguage =
+  "kr";
 
-let koreanMode = "odyssey";
+let koreanMode =
+  "odyssey";
 
-let englishMode = "odysseus";
+let englishMode =
+  "odysseus";
 
-let koreanData = null;
+let koreanData =
+  null;
 
-let englishData = null;
+let englishData =
+  null;
 
-let koreanAnimating = false;
+let koreanAnimating =
+  false;
 
-let englishAnimating = false;
+let englishAnimating =
+  false;
 
-let languageChanging = false;
+let languageChanging =
+  false;
 
-let musicOn = false;
+let musicOn =
+  false;
+
 
 /* ==================================================
    WAIT
 ================================================== */
 
 function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+
+  return new Promise(
+    (resolve) => {
+
+      setTimeout(
+        resolve,
+        ms
+      );
+
+    }
+  );
+
 }
+
+
+/* ==================================================
+   EN TRANSFORM HELPERS
+
+   모바일 영문만 translate3d 사용
+================================================== */
+
+function enTranslate(x, y) {
+
+  if (isMobile) {
+
+    return `translate3d(${x}px, ${y}px, 0)`;
+
+  }
+
+  return `translate(${x}px, ${y}px)`;
+
+}
+
+
+function enTranslateY(y) {
+
+  if (isMobile) {
+
+    return `translate3d(0, ${y}px, 0)`;
+
+  }
+
+  return `translateY(${y}px)`;
+
+}
+
 
 /* ==================================================
    MUSIC
@@ -122,93 +225,197 @@ musicSwitch.addEventListener(
   "click",
 
   async () => {
+
     if (!musicOn) {
+
       try {
+
         await music.play();
 
         musicOn = true;
 
-        musicSwitch.classList.add("is-on");
-      } catch (error) {
-        console.error("음악 재생 실패:", error);
+        musicSwitch.classList.add(
+          "is-on"
+        );
+
       }
-    } else {
+
+      catch (error) {
+
+        console.error(
+          "음악 재생 실패:",
+          error
+        );
+
+      }
+
+    }
+
+    else {
+
       music.pause();
 
       musicOn = false;
 
-      musicSwitch.classList.remove("is-on");
+      musicSwitch.classList.remove(
+        "is-on"
+      );
+
     }
-  },
+
+  }
 );
+
 
 /* ==================================================
    LANGUAGE UI
 ================================================== */
 
 function updateLanguageUI() {
-  if (activeLanguage === "kr") {
-    krLabel.classList.add("active-mode");
 
-    enLabel.classList.remove("active-mode");
-  } else {
-    enLabel.classList.add("active-mode");
+  if (
+    activeLanguage === "kr"
+  ) {
 
-    krLabel.classList.remove("active-mode");
+    krLabel.classList.add(
+      "active-mode"
+    );
+
+    enLabel.classList.remove(
+      "active-mode"
+    );
+
   }
+
+  else {
+
+    enLabel.classList.add(
+      "active-mode"
+    );
+
+    krLabel.classList.remove(
+      "active-mode"
+    );
+
+  }
+
 }
+
 
 /* ==================================================
    LANGUAGE CHANGE
 ================================================== */
 
-async function changeLanguage(language) {
+async function changeLanguage(
+  language
+) {
+
   if (languageChanging) {
     return;
   }
 
-  if (activeLanguage === language) {
+  if (
+    activeLanguage === language
+  ) {
     return;
   }
 
+
   languageChanging = true;
 
-  container.classList.add("language-out");
+
+  /* ----------------------------------------------
+     OUT
+  ---------------------------------------------- */
+
+  container.classList.add(
+    "language-out"
+  );
+
 
   await wait(560);
 
-  activeLanguage = language;
+
+  activeLanguage =
+    language;
+
 
   updateLanguageUI();
 
-  if (language === "en") {
-    englishMode = "odysseus";
 
-    enSwitch.classList.remove("is-on");
+  if (
+    language === "en"
+  ) {
+
+    englishMode =
+      "odysseus";
+
+    enSwitch.classList.remove(
+      "is-on"
+    );
+
   }
 
-  if (language === "kr") {
+
+  /* ----------------------------------------------
+     SVG CHANGE
+  ---------------------------------------------- */
+
+  if (
+    language === "kr"
+  ) {
+
     await loadKorean(true);
-  } else {
-    await loadEnglish(true);
+
   }
 
-  container.classList.remove("language-out");
+  else {
 
-  container.classList.add("language-in");
+    await loadEnglish(true);
+
+  }
+
+
+  /* ----------------------------------------------
+     IN
+  ---------------------------------------------- */
+
+  container.classList.remove(
+    "language-out"
+  );
+
+  container.classList.add(
+    "language-in"
+  );
+
 
   void container.offsetWidth;
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      container.classList.remove("language-in");
-    });
-  });
+
+  requestAnimationFrame(
+    () => {
+
+      requestAnimationFrame(
+        () => {
+
+          container.classList.remove(
+            "language-in"
+          );
+
+        }
+      );
+
+    }
+  );
+
 
   await wait(1200);
 
+
   languageChanging = false;
+
 }
+
 
 /* ==================================================
    LANGUAGE BUTTONS
@@ -216,19 +423,23 @@ async function changeLanguage(language) {
 
 krLabel.addEventListener(
   "click",
-
   () => {
+
     changeLanguage("kr");
-  },
+
+  }
 );
+
 
 enLabel.addEventListener(
   "click",
-
   () => {
+
     changeLanguage("en");
-  },
+
+  }
 );
+
 
 /* ==================================================
    KR SWITCH
@@ -238,15 +449,23 @@ krSwitch.addEventListener(
   "click",
 
   async () => {
-    if (activeLanguage !== "kr") {
+
+    if (
+      activeLanguage !== "kr"
+    ) {
+
       await changeLanguage("kr");
 
       return;
+
     }
 
+
     toggleKorean();
-  },
+
+  }
 );
+
 
 /* ==================================================
    EN SWITCH
@@ -256,168 +475,351 @@ enSwitch.addEventListener(
   "click",
 
   async () => {
-    if (activeLanguage !== "en") {
+
+    if (
+      activeLanguage !== "en"
+    ) {
+
       await changeLanguage("en");
 
       return;
+
     }
 
+
     toggleEnglish();
-  },
+
+  }
 );
+
 
 /* ==================================================
    KR LOAD
 ================================================== */
 
-async function loadKorean(isLanguageSwitch = false) {
+async function loadKorean(
+  isLanguageSwitch = false
+) {
+
   if (!isLanguageSwitch) {
-    container.classList.add("is-loading");
+
+    container.classList.add(
+      "is-loading"
+    );
+
   }
 
+
   try {
-    const response = await fetch("./img/lettering.svg");
+
+    const response =
+      await fetch(
+        "./img/lettering.svg"
+      );
+
 
     if (!response.ok) {
-      throw new Error("lettering.svg를 불러오지 못했습니다.");
+
+      throw new Error(
+        "lettering.svg를 불러오지 못했습니다."
+      );
+
     }
 
-    const svgText = await response.text();
 
-    container.innerHTML = svgText;
+    const svgText =
+      await response.text();
 
-    const svg = container.querySelector("svg");
+
+    container.innerHTML =
+      svgText;
+
+
+    const svg =
+      container.querySelector(
+        "svg"
+      );
+
 
     if (!svg) {
-      throw new Error("SVG를 찾을 수 없습니다.");
+
+      throw new Error(
+        "SVG를 찾을 수 없습니다."
+      );
+
     }
+
 
     setupKorean(svg);
 
+
     if (!isLanguageSwitch) {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          container.classList.remove("is-loading");
-        });
-      });
+
+      requestAnimationFrame(
+        () => {
+
+          requestAnimationFrame(
+            () => {
+
+              container.classList.remove(
+                "is-loading"
+              );
+
+            }
+          );
+
+        }
+      );
+
     }
-  } catch (error) {
+
+  }
+
+  catch (error) {
+
     console.error(error);
 
-    container.classList.remove("is-loading");
+    container.classList.remove(
+      "is-loading"
+    );
+
   }
+
 }
+
 
 /* ==================================================
    KR SETUP
 ================================================== */
 
 function setupKorean(svg) {
-  const letter01 = svg.querySelector("#letter01");
 
-  const letter02 = svg.querySelector("#letter02");
+  const letter01 =
+    svg.querySelector("#letter01");
 
-  const letter03 = svg.querySelector("#letter03");
+  const letter02 =
+    svg.querySelector("#letter02");
 
-  const letter04 = svg.querySelector("#letter04");
+  const letter03 =
+    svg.querySelector("#letter03");
 
-  const letter05 = svg.querySelector("#letter05");
+  const letter04 =
+    svg.querySelector("#letter04");
 
-  const letter06 = svg.querySelector("#letter06");
+  const letter05 =
+    svg.querySelector("#letter05");
 
-  const letters = [letter01, letter02, letter03, letter04, letter05, letter06];
+  const letter06 =
+    svg.querySelector("#letter06");
 
-  if (letters.some((letter) => !letter)) {
-    throw new Error("letter01 ~ letter06을 찾지 못했습니다.");
-  }
 
-  const SVG_NS = "http://www.w3.org/2000/svg";
-
-  const wordGroup = document.createElementNS(SVG_NS, "g");
-
-  wordGroup.id = "wordGroup";
-
-  letters.forEach((letter) => {
-    wordGroup.appendChild(letter);
-  });
-
-  svg.appendChild(wordGroup);
-
-  const GAP = 25;
-
-  const seBox = letter03.getBBox();
-
-  const iBox = letter06.getBBox();
-
-  const iFinalX = seBox.x + seBox.width + GAP - iBox.x;
-
-  const iFinalY = seBox.y + seBox.height / 2 - (iBox.y + iBox.height / 2);
-
-  function getSvgCenterX() {
-    const viewBox = svg.viewBox.baseVal;
-
-    return viewBox.x + viewBox.width / 2;
-  }
-
-  function getCombinedBox(elements) {
-    let minX = Infinity;
-
-    let maxX = -Infinity;
-
-    elements.forEach((element) => {
-      const box = element.getBBox();
-
-      minX = Math.min(minX, box.x);
-
-      maxX = Math.max(maxX, box.x + box.width);
-    });
-
-    return {
-      x: minX,
-
-      width: maxX - minX,
-    };
-  }
-
-  const odysseusBox = getCombinedBox([
+  const letters = [
     letter01,
     letter02,
     letter03,
     letter04,
     letter05,
-  ]);
+    letter06,
+  ];
 
-  const odysseusCenter = odysseusBox.x + odysseusBox.width / 2;
 
-  const odysseusShift = getSvgCenterX() - odysseusCenter;
+  if (
+    letters.some(
+      (letter) => !letter
+    )
+  ) {
 
-  const box01 = letter01.getBBox();
+    throw new Error(
+      "letter01 ~ letter06을 찾지 못했습니다."
+    );
 
-  const box02 = letter02.getBBox();
+  }
 
-  const box03 = letter03.getBBox();
 
-  const iFinalLeft = iBox.x + iFinalX;
+  const SVG_NS =
+    "http://www.w3.org/2000/svg";
 
-  const iFinalRight = iFinalLeft + iBox.width;
 
-  const odysseyStart = Math.min(box01.x, box02.x, box03.x, iFinalLeft);
+  const wordGroup =
+    document.createElementNS(
+      SVG_NS,
+      "g"
+    );
 
-  const odysseyEnd = Math.max(
-    box01.x + box01.width,
 
-    box02.x + box02.width,
+  wordGroup.id =
+    "wordGroup";
 
-    box03.x + box03.width,
 
-    iFinalRight,
+  letters.forEach(
+    (letter) => {
+
+      wordGroup.appendChild(
+        letter
+      );
+
+    }
   );
 
-  const odysseyCenter = (odysseyStart + odysseyEnd) / 2;
 
-  const odysseyShift = getSvgCenterX() - odysseyCenter;
+  svg.appendChild(
+    wordGroup
+  );
+
+
+  const GAP = 25;
+
+
+  const seBox =
+    letter03.getBBox();
+
+  const iBox =
+    letter06.getBBox();
+
+
+  const iFinalX =
+    seBox.x +
+    seBox.width +
+    GAP -
+    iBox.x;
+
+
+  const iFinalY =
+    seBox.y +
+    seBox.height / 2 -
+    (
+      iBox.y +
+      iBox.height / 2
+    );
+
+
+  function getSvgCenterX() {
+
+    const viewBox =
+      svg.viewBox.baseVal;
+
+    return (
+      viewBox.x +
+      viewBox.width / 2
+    );
+
+  }
+
+
+  function getCombinedBox(
+    elements
+  ) {
+
+    let minX = Infinity;
+    let maxX = -Infinity;
+
+
+    elements.forEach(
+      (element) => {
+
+        const box =
+          element.getBBox();
+
+
+        minX =
+          Math.min(
+            minX,
+            box.x
+          );
+
+
+        maxX =
+          Math.max(
+            maxX,
+            box.x + box.width
+          );
+
+      }
+    );
+
+
+    return {
+      x: minX,
+      width: maxX - minX,
+    };
+
+  }
+
+
+  const odysseusBox =
+    getCombinedBox(
+      [
+        letter01,
+        letter02,
+        letter03,
+        letter04,
+        letter05,
+      ]
+    );
+
+
+  const odysseusCenter =
+    odysseusBox.x +
+    odysseusBox.width / 2;
+
+
+  const odysseusShift =
+    getSvgCenterX() -
+    odysseusCenter;
+
+
+  const box01 =
+    letter01.getBBox();
+
+  const box02 =
+    letter02.getBBox();
+
+  const box03 =
+    letter03.getBBox();
+
+
+  const iFinalLeft =
+    iBox.x +
+    iFinalX;
+
+
+  const iFinalRight =
+    iFinalLeft +
+    iBox.width;
+
+
+  const odysseyStart =
+    Math.min(
+      box01.x,
+      box02.x,
+      box03.x,
+      iFinalLeft
+    );
+
+
+  const odysseyEnd =
+    Math.max(
+      box01.x + box01.width,
+      box02.x + box02.width,
+      box03.x + box03.width,
+      iFinalRight
+    );
+
+
+  const odysseyCenter =
+    (
+      odysseyStart +
+      odysseyEnd
+    ) / 2;
+
+
+  const odysseyShift =
+    getSvgCenterX() -
+    odysseyCenter;
+
 
   koreanData = {
+
     letter04,
     letter05,
     letter06,
@@ -429,56 +831,86 @@ function setupKorean(svg) {
 
     odysseyShift,
     odysseusShift,
+
   };
 
-  if (koreanMode === "odyssey") {
+
+  if (
+    koreanMode === "odyssey"
+  ) {
+
     showOdysseyInstant();
-  } else {
-    showOdysseusInstant();
+
   }
+
+  else {
+
+    showOdysseusInstant();
+
+  }
+
 }
+
 
 /* ==================================================
    KR TRANSITIONS
+
+   한글은 원래대로 유지
 ================================================== */
 
 function restoreKoreanTransitions() {
+
   if (!koreanData) {
     return;
   }
 
-  const { letter04, letter05, letter06, wordGroup } = koreanData;
 
-  const transition = isMobile
-    ? `
-          transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
-          opacity 1.45s ease
-        `
-    : `
-          transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
-          opacity 1.45s ease,
-          filter 1.45s ease
-        `;
+  const {
+    letter04,
+    letter05,
+    letter06,
+    wordGroup,
+  } =
+    koreanData;
 
-  letter04.style.transition = transition;
 
-  letter05.style.transition = transition;
+  const transition =
+    `
+      transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 1.45s ease,
+      filter 1.45s ease
+    `;
 
-  letter06.style.transition = transition;
 
-  wordGroup.style.transition = "transform 1.6s cubic-bezier(0.22, 1, 0.36, 1)";
+  letter04.style.transition =
+    transition;
+
+  letter05.style.transition =
+    transition;
+
+  letter06.style.transition =
+    transition;
+
+
+  wordGroup.style.transition =
+    "transform 1.6s cubic-bezier(0.22, 1, 0.36, 1)";
+
 }
+
 
 /* ==================================================
    ODYSSEY INITIAL
 ================================================== */
 
 function showOdysseyInstant() {
+
   if (!koreanData) {
     return;
   }
 
+
   const {
+
     letter04,
     letter05,
     letter06,
@@ -489,62 +921,99 @@ function showOdysseyInstant() {
     iFinalY,
 
     odysseyShift,
-  } = koreanData;
 
-  letter04.style.transition = "none";
+  } =
+    koreanData;
 
-  letter05.style.transition = "none";
 
-  letter06.style.transition = "none";
+  letter04.style.transition =
+    "none";
 
-  wordGroup.style.transition = "none";
+  letter05.style.transition =
+    "none";
 
-  letter04.style.opacity = "0";
+  letter06.style.transition =
+    "none";
 
-  letter04.style.filter = isMobile ? "none" : "blur(10px)";
+  wordGroup.style.transition =
+    "none";
 
-  letter04.style.transform = `translateY(${MOVE_UP_1}px) scale(0.97)`;
 
-  letter05.style.opacity = "0";
+  letter04.style.opacity =
+    "0";
 
-  letter05.style.filter = isMobile ? "none" : "blur(10px)";
+  letter04.style.filter =
+    "blur(10px)";
 
-  letter05.style.transform = `translateY(${MOVE_UP_2}px) scale(0.97)`;
+  letter04.style.transform =
+    "translateY(-150px) scale(0.97)";
 
-  letter06.style.visibility = "visible";
 
-  letter06.style.opacity = "1";
+  letter05.style.opacity =
+    "0";
 
-  letter06.style.filter = "none";
+  letter05.style.filter =
+    "blur(10px)";
 
-  letter06.style.transform = `translate(
+  letter05.style.transform =
+    "translateY(-170px) scale(0.97)";
+
+
+  letter06.style.visibility =
+    "visible";
+
+  letter06.style.opacity =
+    "1";
+
+  letter06.style.filter =
+    "blur(0px)";
+
+  letter06.style.transform =
+    `translate(
       ${iFinalX}px,
       ${iFinalY}px
     )`;
 
-  wordGroup.style.transform = `translateX(
-      ${odysseyShift}px
-    )`;
 
-  krSwitch.classList.remove("is-on");
+  wordGroup.style.transform =
+    `translateX(${odysseyShift}px)`;
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      restoreKoreanTransitions();
-    });
-  });
+
+  krSwitch.classList.remove(
+    "is-on"
+  );
+
+
+  requestAnimationFrame(
+    () => {
+
+      requestAnimationFrame(
+        () => {
+
+          restoreKoreanTransitions();
+
+        }
+      );
+
+    }
+  );
+
 }
+
 
 /* ==================================================
    ODYSSEUS INITIAL
 ================================================== */
 
 function showOdysseusInstant() {
+
   if (!koreanData) {
     return;
   }
 
+
   const {
+
     letter04,
     letter05,
     letter06,
@@ -555,62 +1024,105 @@ function showOdysseusInstant() {
     iFinalY,
 
     odysseusShift,
-  } = koreanData;
 
-  letter04.style.transition = "none";
+  } =
+    koreanData;
 
-  letter05.style.transition = "none";
 
-  letter06.style.transition = "none";
+  letter04.style.transition =
+    "none";
 
-  wordGroup.style.transition = "none";
+  letter05.style.transition =
+    "none";
 
-  letter04.style.opacity = "1";
+  letter06.style.transition =
+    "none";
 
-  letter04.style.filter = "none";
+  wordGroup.style.transition =
+    "none";
 
-  letter04.style.transform = "translateY(0px) scale(1)";
 
-  letter05.style.opacity = "1";
+  letter04.style.opacity =
+    "1";
 
-  letter05.style.filter = "none";
+  letter04.style.filter =
+    "blur(0px)";
 
-  letter05.style.transform = "translateY(0px) scale(1)";
+  letter04.style.transform =
+    "translateY(0px) scale(1)";
 
-  letter06.style.opacity = "0";
 
-  letter06.style.filter = isMobile ? "none" : "blur(8px)";
+  letter05.style.opacity =
+    "1";
 
-  letter06.style.transform = `translate(
+  letter05.style.filter =
+    "blur(0px)";
+
+  letter05.style.transform =
+    "translateY(0px) scale(1)";
+
+
+  letter06.style.opacity =
+    "0";
+
+  letter06.style.filter =
+    "blur(8px)";
+
+  letter06.style.transform =
+    `translate(
       ${iFinalX}px,
-      ${iFinalY + MOVE_DOWN_1}px
+      ${iFinalY + 150}px
     )`;
 
-  wordGroup.style.transform = `translateX(
-      ${odysseusShift}px
-    )`;
 
-  krSwitch.classList.add("is-on");
+  wordGroup.style.transform =
+    `translateX(${odysseusShift}px)`;
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      restoreKoreanTransitions();
-    });
-  });
+
+  krSwitch.classList.add(
+    "is-on"
+  );
+
+
+  requestAnimationFrame(
+    () => {
+
+      requestAnimationFrame(
+        () => {
+
+          restoreKoreanTransitions();
+
+        }
+      );
+
+    }
+  );
+
 }
+
 
 /* ==================================================
    KR TOGGLE
+
+   기존 그대로
 ================================================== */
 
 function toggleKorean() {
-  if (koreanAnimating || languageChanging || !koreanData) {
+
+  if (
+    koreanAnimating ||
+    languageChanging ||
+    !koreanData
+  ) {
     return;
   }
 
+
   koreanAnimating = true;
 
+
   const {
+
     letter04,
     letter05,
     letter06,
@@ -622,207 +1134,463 @@ function toggleKorean() {
 
     odysseyShift,
     odysseusShift,
-  } = koreanData;
 
-  if (koreanMode === "odyssey") {
-    koreanMode = "odysseus";
+  } =
+    koreanData;
 
-    krSwitch.classList.add("is-on");
 
-    wordGroup.style.transform = `translateX(
-        ${odysseusShift}px
-      )`;
+  if (
+    koreanMode === "odyssey"
+  ) {
 
-    letter06.style.transform = `translate(
+    koreanMode =
+      "odysseus";
+
+
+    krSwitch.classList.add(
+      "is-on"
+    );
+
+
+    wordGroup.style.transform =
+      `translateX(${odysseusShift}px)`;
+
+
+    letter06.style.transform =
+      `translate(
         ${iFinalX}px,
-        ${iFinalY + MOVE_DOWN_1}px
+        ${iFinalY + 150}px
       )`;
 
-    letter06.style.opacity = "0";
+    letter06.style.opacity =
+      "0";
 
-    letter06.style.filter = isMobile ? "none" : "blur(8px)";
+    letter06.style.filter =
+      "blur(8px)";
 
-    setTimeout(() => {
-      letter04.style.transform = "translateY(0px) scale(1)";
 
-      letter04.style.opacity = "1";
+    setTimeout(
+      () => {
 
-      letter04.style.filter = "none";
-    }, 220);
+        letter04.style.transform =
+          "translateY(0px) scale(1)";
 
-    setTimeout(() => {
-      letter05.style.transform = "translateY(0px) scale(1)";
+        letter04.style.opacity =
+          "1";
 
-      letter05.style.opacity = "1";
+        letter04.style.filter =
+          "blur(0px)";
 
-      letter05.style.filter = "none";
-    }, 320);
-  } else {
-    koreanMode = "odyssey";
+      },
+      220
+    );
 
-    krSwitch.classList.remove("is-on");
 
-    wordGroup.style.transform = `translateX(
-        ${odysseyShift}px
-      )`;
+    setTimeout(
+      () => {
 
-    letter04.style.transform = `translateY(${MOVE_UP_1}px) scale(0.97)`;
+        letter05.style.transform =
+          "translateY(0px) scale(1)";
 
-    letter04.style.opacity = "0";
+        letter05.style.opacity =
+          "1";
 
-    letter04.style.filter = isMobile ? "none" : "blur(10px)";
+        letter05.style.filter =
+          "blur(0px)";
 
-    setTimeout(() => {
-      letter05.style.transform = `translateY(${MOVE_UP_2}px) scale(0.97)`;
+      },
+      320
+    );
 
-      letter05.style.opacity = "0";
+  }
 
-      letter05.style.filter = isMobile ? "none" : "blur(10px)";
-    }, 90);
+  else {
 
-    setTimeout(() => {
-      letter06.style.transform = `translate(
+    koreanMode =
+      "odyssey";
+
+
+    krSwitch.classList.remove(
+      "is-on"
+    );
+
+
+    wordGroup.style.transform =
+      `translateX(${odysseyShift}px)`;
+
+
+    letter04.style.transform =
+      "translateY(-150px) scale(0.97)";
+
+    letter04.style.opacity =
+      "0";
+
+    letter04.style.filter =
+      "blur(10px)";
+
+
+    setTimeout(
+      () => {
+
+        letter05.style.transform =
+          "translateY(-170px) scale(0.97)";
+
+        letter05.style.opacity =
+          "0";
+
+        letter05.style.filter =
+          "blur(10px)";
+
+      },
+      90
+    );
+
+
+    setTimeout(
+      () => {
+
+        letter06.style.transform =
+          `translate(
             ${iFinalX}px,
             ${iFinalY}px
           )`;
 
-      letter06.style.opacity = "1";
+        letter06.style.opacity =
+          "1";
 
-      letter06.style.filter = "none";
-    }, 310);
+        letter06.style.filter =
+          "blur(0px)";
+
+      },
+      310
+    );
+
   }
 
-  setTimeout(() => {
-    koreanAnimating = false;
-  }, 1750);
+
+  setTimeout(
+    () => {
+
+      koreanAnimating = false;
+
+    },
+    1750
+  );
+
 }
+
 
 /* ==================================================
    EN LOAD
 ================================================== */
 
-async function loadEnglish(isLanguageSwitch = false) {
+async function loadEnglish(
+  isLanguageSwitch = false
+) {
+
   if (!isLanguageSwitch) {
-    container.classList.add("is-loading");
+
+    container.classList.add(
+      "is-loading"
+    );
+
   }
 
+
   try {
-    const [odResponse, obResponse] = await Promise.all([
-      fetch("./img/en_od.svg"),
 
-      fetch("./img/en_ob.svg"),
-    ]);
+    const [
+      odResponse,
+      obResponse,
+    ] =
+      await Promise.all(
+        [
+          fetch("./img/en_od.svg"),
+          fetch("./img/en_ob.svg"),
+        ]
+      );
 
-    if (!odResponse.ok || !obResponse.ok) {
-      throw new Error("영문 SVG를 불러오지 못했습니다.");
+
+    if (
+      !odResponse.ok ||
+      !obResponse.ok
+    ) {
+
+      throw new Error(
+        "영문 SVG를 불러오지 못했습니다."
+      );
+
     }
 
-    const [odText, obText] = await Promise.all([
-      odResponse.text(),
 
-      obResponse.text(),
-    ]);
+    const [
+      odText,
+      obText,
+    ] =
+      await Promise.all(
+        [
+          odResponse.text(),
+          obResponse.text(),
+        ]
+      );
 
-    container.innerHTML = odText;
 
-    const svg = container.querySelector("svg");
+    container.innerHTML =
+      odText;
+
+
+    const svg =
+      container.querySelector(
+        "svg"
+      );
+
 
     if (!svg) {
-      throw new Error("ODYSSEUS SVG를 찾지 못했습니다.");
+
+      throw new Error(
+        "ODYSSEUS SVG를 찾지 못했습니다."
+      );
+
     }
 
-    const parser = new DOMParser();
 
-    const obDocument = parser.parseFromString(obText, "image/svg+xml");
+    const parser =
+      new DOMParser();
 
-    const obSvg = obDocument.querySelector("svg");
 
-    const O = svg.querySelector("#letter_O");
+    const obDocument =
+      parser.parseFromString(
+        obText,
+        "image/svg+xml"
+      );
 
-    const D = svg.querySelector("#letter_D");
 
-    const Y = svg.querySelector("#letter_Y");
+    const obSvg =
+      obDocument.querySelector(
+        "svg"
+      );
 
-    const S = svg.querySelector("#letter_S");
 
-    const S2 = svg.querySelector("#letter_S2");
+    const O =
+      svg.querySelector("#letter_O");
 
-    const E = svg.querySelector("#letter_E");
+    const D =
+      svg.querySelector("#letter_D");
 
-    const U = svg.querySelector("#letter_U");
+    const Y =
+      svg.querySelector("#letter_Y");
 
-    const S1 = svg.querySelector("#letter_S1");
+    const S =
+      svg.querySelector("#letter_S");
 
-    const odLetters = [O, D, Y, S, S2, E, U, S1];
+    const S2 =
+      svg.querySelector("#letter_S2");
 
-    if (odLetters.some((letter) => !letter)) {
-      throw new Error("ODYSSEUS의 letter ID를 확인해주세요.");
+    const E =
+      svg.querySelector("#letter_E");
+
+    const U =
+      svg.querySelector("#letter_U");
+
+    const S1 =
+      svg.querySelector("#letter_S1");
+
+
+    const odLetters = [
+      O,
+      D,
+      Y,
+      S,
+      S2,
+      E,
+      U,
+      S1,
+    ];
+
+
+    if (
+      odLetters.some(
+        (letter) => !letter
+      )
+    ) {
+
+      throw new Error(
+        "ODYSSEUS의 letter ID를 확인해주세요."
+      );
+
     }
 
-    odLetters.forEach((letter) => {
-      letter.classList.add("en-letter");
-    });
 
-    const obB = obSvg.querySelector("#letter_B");
+    odLetters.forEach(
+      (letter) => {
+
+        letter.classList.add(
+          "en-letter"
+        );
+
+      }
+    );
+
+
+    const obB =
+      obSvg.querySelector(
+        "#letter_B"
+      );
+
 
     if (!obB) {
-      throw new Error("OBEY의 letter_B를 찾지 못했습니다.");
+
+      throw new Error(
+        "OBEY의 letter_B를 찾지 못했습니다."
+      );
+
     }
 
-    const B = document.importNode(obB, true);
 
-    B.id = "letter_B_live";
+    const B =
+      document.importNode(
+        obB,
+        true
+      );
 
-    B.classList.add("en-letter");
+
+    B.id =
+      "letter_B_live";
+
+
+    B.classList.add(
+      "en-letter"
+    );
+
 
     svg.appendChild(B);
 
-    const SVG_NS = "http://www.w3.org/2000/svg";
 
-    const englishWordGroup = document.createElementNS(SVG_NS, "g");
+    const SVG_NS =
+      "http://www.w3.org/2000/svg";
 
-    englishWordGroup.id = "englishWordGroup";
 
-    [O, D, Y, S, S2, E, U, S1, B].forEach((letter) => {
-      englishWordGroup.appendChild(letter);
-    });
+    const englishWordGroup =
+      document.createElementNS(
+        SVG_NS,
+        "g"
+      );
 
-    svg.appendChild(englishWordGroup);
 
-    const targetBoxes = getObeyBoxes(obText);
+    englishWordGroup.id =
+      "englishWordGroup";
 
-    const odViewBox = svg.viewBox.baseVal;
 
-    const obViewBox = obSvg.viewBox.baseVal;
+    [
+      O,
+      D,
+      Y,
+      S,
+      S2,
+      E,
+      U,
+      S1,
+      B,
+    ].forEach(
+      (letter) => {
+
+        englishWordGroup.appendChild(
+          letter
+        );
+
+      }
+    );
+
+
+    svg.appendChild(
+      englishWordGroup
+    );
+
+
+    const targetBoxes =
+      getObeyBoxes(
+        obText
+      );
+
+
+    const odViewBox =
+      svg.viewBox.baseVal;
+
+
+    const obViewBox =
+      obSvg.viewBox.baseVal;
+
 
     const obeyOffsetX =
-      odViewBox.x + odViewBox.width / 2 - (obViewBox.x + obViewBox.width / 2);
+      (
+        odViewBox.x +
+        odViewBox.width / 2
+      ) -
+      (
+        obViewBox.x +
+        obViewBox.width / 2
+      );
 
-    const OBox = O.getBBox();
 
-    const EBox = E.getBBox();
+    const OBox =
+      O.getBBox();
 
-    const YBox = Y.getBBox();
+    const EBox =
+      E.getBBox();
 
-    const BBox = B.getBBox();
+    const YBox =
+      Y.getBBox();
 
-    const targetOX = obeyOffsetX + targetBoxes.O.x - OBox.x;
+    const BBox =
+      B.getBBox();
 
-    const targetOY = targetBoxes.O.y - OBox.y;
 
-    const targetEX = obeyOffsetX + targetBoxes.E.x - EBox.x;
+    const targetOX =
+      obeyOffsetX +
+      targetBoxes.O.x -
+      OBox.x;
 
-    const targetEY = targetBoxes.E.y - EBox.y;
 
-    const targetYX = obeyOffsetX + targetBoxes.Y.x - YBox.x;
+    const targetOY =
+      targetBoxes.O.y -
+      OBox.y;
 
-    const targetYY = targetBoxes.Y.y - YBox.y;
 
-    const targetBX = obeyOffsetX + targetBoxes.B.x - BBox.x;
+    const targetEX =
+      obeyOffsetX +
+      targetBoxes.E.x -
+      EBox.x;
 
-    const targetBY = targetBoxes.B.y - BBox.y;
+
+    const targetEY =
+      targetBoxes.E.y -
+      EBox.y;
+
+
+    const targetYX =
+      obeyOffsetX +
+      targetBoxes.Y.x -
+      YBox.x;
+
+
+    const targetYY =
+      targetBoxes.Y.y -
+      YBox.y;
+
+
+    const targetBX =
+      obeyOffsetX +
+      targetBoxes.B.x -
+      BBox.x;
+
+
+    const targetBY =
+      targetBoxes.B.y -
+      BBox.y;
+
 
     englishData = {
+
       O,
       D,
       Y,
@@ -846,127 +1614,237 @@ async function loadEnglish(isLanguageSwitch = false) {
 
       targetBX,
       targetBY,
+
     };
+
 
     showEnglishOdysseusInstant();
 
+
     if (!isLanguageSwitch) {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          container.classList.remove("is-loading");
-        });
-      });
+
+      requestAnimationFrame(
+        () => {
+
+          requestAnimationFrame(
+            () => {
+
+              container.classList.remove(
+                "is-loading"
+              );
+
+            }
+          );
+
+        }
+      );
+
     }
-  } catch (error) {
+
+  }
+
+  catch (error) {
+
     console.error(error);
 
-    container.classList.remove("is-loading");
+    container.classList.remove(
+      "is-loading"
+    );
+
   }
+
 }
+
 
 /* ==================================================
    OBEY BOXES
 ================================================== */
 
-function getObeyBoxes(svgText) {
-  const holder = document.createElement("div");
+function getObeyBoxes(
+  svgText
+) {
 
-  holder.style.position = "fixed";
+  const holder =
+    document.createElement(
+      "div"
+    );
 
-  holder.style.left = "-10000px";
 
-  holder.style.top = "-10000px";
+  holder.style.position =
+    "fixed";
 
-  holder.style.visibility = "hidden";
+  holder.style.left =
+    "-10000px";
 
-  holder.style.pointerEvents = "none";
+  holder.style.top =
+    "-10000px";
 
-  holder.innerHTML = svgText;
+  holder.style.visibility =
+    "hidden";
 
-  document.body.appendChild(holder);
+  holder.style.pointerEvents =
+    "none";
 
-  const svg = holder.querySelector("svg");
+  holder.innerHTML =
+    svgText;
 
-  const O = svg.querySelector("#letter_O");
 
-  const B = svg.querySelector("#letter_B");
+  document.body.appendChild(
+    holder
+  );
 
-  const E = svg.querySelector("#letter_E");
 
-  const Y = svg.querySelector("#letter_Y");
+  const svg =
+    holder.querySelector(
+      "svg"
+    );
 
-  if (!O || !B || !E || !Y) {
+
+  const O =
+    svg.querySelector("#letter_O");
+
+  const B =
+    svg.querySelector("#letter_B");
+
+  const E =
+    svg.querySelector("#letter_E");
+
+  const Y =
+    svg.querySelector("#letter_Y");
+
+
+  if (
+    !O ||
+    !B ||
+    !E ||
+    !Y
+  ) {
+
     holder.remove();
 
-    throw new Error("OBEY의 O/B/E/Y를 찾지 못했습니다.");
+
+    throw new Error(
+      "OBEY의 O/B/E/Y를 찾지 못했습니다."
+    );
+
   }
 
+
   function copyBox(element) {
-    const box = element.getBBox();
+
+    const box =
+      element.getBBox();
+
 
     return {
-      x: box.x,
 
+      x: box.x,
       y: box.y,
 
       width: box.width,
-
       height: box.height,
+
     };
+
   }
 
+
   const result = {
+
     O: copyBox(O),
-
     B: copyBox(B),
-
     E: copyBox(E),
-
     Y: copyBox(Y),
+
   };
+
 
   holder.remove();
 
+
   return result;
+
 }
+
 
 /* ==================================================
    EN TRANSITIONS
+
+   모바일에서도 속도/거리 동일.
+   개별 blur만 제거.
 ================================================== */
 
 function restoreEnglishTransitions() {
+
   if (!englishData) {
     return;
   }
 
-  const transition = isMobile
-    ? `
+
+  const transition =
+    isMobile
+      ? `
           transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
           opacity 1.45s ease
         `
-    : `
+      : `
           transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
           opacity 1.45s ease,
           filter 1.45s ease
         `;
 
-  const { O, D, Y, S, S2, E, U, S1, B } = englishData;
 
-  [O, D, Y, S, S2, E, U, S1, B].forEach((letter) => {
-    letter.style.transition = transition;
-  });
+  const {
+
+    O,
+    D,
+    Y,
+    S,
+    S2,
+    E,
+    U,
+    S1,
+    B,
+
+  } =
+    englishData;
+
+
+  [
+    O,
+    D,
+    Y,
+    S,
+    S2,
+    E,
+    U,
+    S1,
+    B,
+  ].forEach(
+    (letter) => {
+
+      letter.style.transition =
+        transition;
+
+    }
+  );
+
 }
+
 
 /* ==================================================
    EN INITIAL
 ================================================== */
 
 function showEnglishOdysseusInstant() {
+
   if (!englishData) {
     return;
   }
 
+
   const {
+
     O,
     D,
     Y,
@@ -979,54 +1857,122 @@ function showEnglishOdysseusInstant() {
 
     targetBX,
     targetBY,
-  } = englishData;
 
-  const all = [O, D, Y, S, S2, E, U, S1, B];
+  } =
+    englishData;
 
-  all.forEach((letter) => {
-    letter.style.transition = "none";
-  });
 
-  [O, D, Y, S, S2, E, U, S1].forEach((letter) => {
-    letter.style.opacity = "1";
+  const all = [
+    O,
+    D,
+    Y,
+    S,
+    S2,
+    E,
+    U,
+    S1,
+    B,
+  ];
 
-    letter.style.filter = "none";
 
-    letter.style.transform = "translate(0px, 0px)";
-  });
+  all.forEach(
+    (letter) => {
 
-  B.style.opacity = "0";
+      letter.style.transition =
+        "none";
 
-  B.style.filter = isMobile ? "none" : "blur(10px)";
+    }
+  );
 
-  B.style.transform = `translate(
-      ${targetBX}px,
-      ${targetBY + MOVE_DOWN_1}px
-    )`;
 
-  englishMode = "odysseus";
+  [
+    O,
+    D,
+    Y,
+    S,
+    S2,
+    E,
+    U,
+    S1,
+  ].forEach(
+    (letter) => {
 
-  enSwitch.classList.remove("is-on");
+      letter.style.opacity =
+        "1";
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      restoreEnglishTransitions();
-    });
-  });
+      letter.style.filter =
+        "none";
+
+      letter.style.transform =
+        enTranslate(0, 0);
+
+    }
+  );
+
+
+  B.style.opacity =
+    "0";
+
+
+  B.style.filter =
+    isMobile
+      ? "none"
+      : "blur(10px)";
+
+
+  B.style.transform =
+    enTranslate(
+      targetBX,
+      targetBY + 120
+    );
+
+
+  englishMode =
+    "odysseus";
+
+
+  enSwitch.classList.remove(
+    "is-on"
+  );
+
+
+  requestAnimationFrame(
+    () => {
+
+      requestAnimationFrame(
+        () => {
+
+          restoreEnglishTransitions();
+
+        }
+      );
+
+    }
+  );
+
 }
+
 
 /* ==================================================
    EN TOGGLE
 ================================================== */
 
 function toggleEnglish() {
-  if (englishAnimating || languageChanging || !englishData) {
+
+  if (
+    englishAnimating ||
+    languageChanging ||
+    !englishData
+  ) {
     return;
   }
 
+
   englishAnimating = true;
 
+
   const {
+
     O,
     D,
     Y,
@@ -1048,154 +1994,291 @@ function toggleEnglish() {
 
     targetBX,
     targetBY,
-  } = englishData;
 
-  if (englishMode === "odysseus") {
-    englishMode = "obey";
+  } =
+    englishData;
 
-    enSwitch.classList.add("is-on");
 
-    O.style.transform = `translate(
-        ${targetOX}px,
-        ${targetOY}px
-      )`;
+  /* ==================================================
+     ODYSSEUS → OBEY
+  ================================================== */
 
-    E.style.transform = `translate(
-        ${targetEX}px,
-        ${targetEY}px
-      )`;
+  if (
+    englishMode ===
+    "odysseus"
+  ) {
 
-    Y.style.transform = `translate(
-        ${targetYX}px,
-        ${targetYY}px
-      )`;
+    englishMode =
+      "obey";
 
-    /* =========================================
-       MOBILE:
-       위로 올라가지 않고 제자리 fade-out
-    ========================================== */
 
-    D.style.transform = isMobile
-      ? "translate(0px, 0px)"
-      : `translateY(${MOVE_UP_1}px)`;
+    enSwitch.classList.add(
+      "is-on"
+    );
 
-    D.style.opacity = "0";
 
-    D.style.filter = isMobile ? "none" : "blur(10px)";
+    O.style.transform =
+      enTranslate(
+        targetOX,
+        targetOY
+      );
 
-    S.style.transform = isMobile
-      ? "translate(0px, 0px)"
-      : `translateY(${MOVE_DOWN_1}px)`;
 
-    S.style.opacity = "0";
+    E.style.transform =
+      enTranslate(
+        targetEX,
+        targetEY
+      );
 
-    S.style.filter = isMobile ? "none" : "blur(10px)";
 
-    setTimeout(() => {
-      S2.style.transform = isMobile
-        ? "translate(0px, 0px)"
-        : `translateY(${MOVE_UP_1}px)`;
+    Y.style.transform =
+      enTranslate(
+        targetYX,
+        targetYY
+      );
 
-      S2.style.opacity = "0";
 
-      S2.style.filter = isMobile ? "none" : "blur(10px)";
-    }, 70);
+    D.style.transform =
+      enTranslateY(-140);
 
-    setTimeout(() => {
-      U.style.transform = isMobile
-        ? "translate(0px, 0px)"
-        : `translateY(${MOVE_DOWN_2}px)`;
+    D.style.opacity =
+      "0";
 
-      U.style.opacity = "0";
+    D.style.filter =
+      isMobile
+        ? "none"
+        : "blur(10px)";
 
-      U.style.filter = isMobile ? "none" : "blur(10px)";
-    }, 130);
 
-    setTimeout(() => {
-      S1.style.transform = isMobile
-        ? "translate(0px, 0px)"
-        : `translateY(${MOVE_UP_2}px)`;
+    S.style.transform =
+      enTranslateY(150);
 
-      S1.style.opacity = "0";
+    S.style.opacity =
+      "0";
 
-      S1.style.filter = isMobile ? "none" : "blur(10px)";
-    }, 190);
+    S.style.filter =
+      isMobile
+        ? "none"
+        : "blur(10px)";
 
-    setTimeout(() => {
-      B.style.transform = `translate(
-            ${targetBX}px,
-            ${targetBY}px
-          )`;
 
-      B.style.opacity = "1";
+    setTimeout(
+      () => {
 
-      B.style.filter = "none";
-    }, 300);
-  } else {
-    englishMode = "odysseus";
+        S2.style.transform =
+          enTranslateY(-150);
 
-    enSwitch.classList.remove("is-on");
+        S2.style.opacity =
+          "0";
 
-    B.style.transform = `translate(
-        ${targetBX}px,
-        ${targetBY + MOVE_DOWN_1}px
-      )`;
+        S2.style.filter =
+          isMobile
+            ? "none"
+            : "blur(10px)";
 
-    B.style.opacity = "0";
+      },
+      70
+    );
 
-    B.style.filter = isMobile ? "none" : "blur(10px)";
 
-    O.style.transform = "translate(0px, 0px)";
+    setTimeout(
+      () => {
 
-    E.style.transform = "translate(0px, 0px)";
+        U.style.transform =
+          enTranslateY(160);
 
-    Y.style.transform = "translate(0px, 0px)";
+        U.style.opacity =
+          "0";
 
-    setTimeout(() => {
-      D.style.transform = "translateY(0px)";
+        U.style.filter =
+          isMobile
+            ? "none"
+            : "blur(10px)";
 
-      D.style.opacity = "1";
+      },
+      130
+    );
 
-      D.style.filter = "none";
-    }, 180);
 
-    setTimeout(() => {
-      S.style.transform = "translateY(0px)";
+    setTimeout(
+      () => {
 
-      S.style.opacity = "1";
+        S1.style.transform =
+          enTranslateY(-160);
 
-      S.style.filter = "none";
-    }, 230);
+        S1.style.opacity =
+          "0";
 
-    setTimeout(() => {
-      S2.style.transform = "translateY(0px)";
+        S1.style.filter =
+          isMobile
+            ? "none"
+            : "blur(10px)";
 
-      S2.style.opacity = "1";
+      },
+      190
+    );
 
-      S2.style.filter = "none";
-    }, 280);
 
-    setTimeout(() => {
-      U.style.transform = "translateY(0px)";
+    setTimeout(
+      () => {
 
-      U.style.opacity = "1";
+        B.style.transform =
+          enTranslate(
+            targetBX,
+            targetBY
+          );
 
-      U.style.filter = "none";
-    }, 330);
+        B.style.opacity =
+          "1";
 
-    setTimeout(() => {
-      S1.style.transform = "translateY(0px)";
+        B.style.filter =
+          "none";
 
-      S1.style.opacity = "1";
+      },
+      300
+    );
 
-      S1.style.filter = "none";
-    }, 380);
   }
 
-  setTimeout(() => {
-    englishAnimating = false;
-  }, 1750);
+
+  /* ==================================================
+     OBEY → ODYSSEUS
+  ================================================== */
+
+  else {
+
+    englishMode =
+      "odysseus";
+
+
+    enSwitch.classList.remove(
+      "is-on"
+    );
+
+
+    B.style.transform =
+      enTranslate(
+        targetBX,
+        targetBY + 120
+      );
+
+    B.style.opacity =
+      "0";
+
+    B.style.filter =
+      isMobile
+        ? "none"
+        : "blur(10px)";
+
+
+    O.style.transform =
+      enTranslate(0, 0);
+
+    E.style.transform =
+      enTranslate(0, 0);
+
+    Y.style.transform =
+      enTranslate(0, 0);
+
+
+    setTimeout(
+      () => {
+
+        D.style.transform =
+          enTranslateY(0);
+
+        D.style.opacity =
+          "1";
+
+        D.style.filter =
+          "none";
+
+      },
+      180
+    );
+
+
+    setTimeout(
+      () => {
+
+        S.style.transform =
+          enTranslateY(0);
+
+        S.style.opacity =
+          "1";
+
+        S.style.filter =
+          "none";
+
+      },
+      230
+    );
+
+
+    setTimeout(
+      () => {
+
+        S2.style.transform =
+          enTranslateY(0);
+
+        S2.style.opacity =
+          "1";
+
+        S2.style.filter =
+          "none";
+
+      },
+      280
+    );
+
+
+    setTimeout(
+      () => {
+
+        U.style.transform =
+          enTranslateY(0);
+
+        U.style.opacity =
+          "1";
+
+        U.style.filter =
+          "none";
+
+      },
+      330
+    );
+
+
+    setTimeout(
+      () => {
+
+        S1.style.transform =
+          enTranslateY(0);
+
+        S1.style.opacity =
+          "1";
+
+        S1.style.filter =
+          "none";
+
+      },
+      380
+    );
+
+  }
+
+
+  setTimeout(
+    () => {
+
+      englishAnimating = false;
+
+    },
+    1750
+  );
+
 }
+
 
 /* ==================================================
    INITIAL
