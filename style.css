@@ -88,13 +88,9 @@ body {
 
   opacity: 1;
 
-  /*
-    평상시 filter 자체를 제거.
-    blur(0px)도 사용하지 않음.
-  */
   filter: none;
 
-  /* 데스크톱 위치 */
+  /* 데스크톱 전체 위치 */
   transform: translateY(-160px);
 
   transition:
@@ -149,17 +145,6 @@ body {
    SVG
 ================================================== */
 
-/*
-  IMPORTANT
-
-  max-height를 없앰.
-
-  en_od.svg의 viewBox가 위/아래로 커졌기 때문에
-  max-height로 맞추면 글자가 작아짐.
-
-  width를 기준으로 크기를 맞춤.
-*/
-
 #svg-container svg {
   display: block;
 
@@ -182,7 +167,6 @@ body {
 
 /* ==================================================
    KR LETTERS
-   기존 방식 그대로
 ================================================== */
 
 #letter01,
@@ -215,12 +199,6 @@ body {
 
 /* ==================================================
    ENGLISH
-
-   매우 중요:
-   영문 글자에는 CSS transform / transition 없음.
-
-   영문 애니메이션은 JS에서
-   SVG <animateTransform>으로만 처리.
 ================================================== */
 
 #englishWordGroup {
@@ -230,19 +208,10 @@ body {
 #englishWordGroup .en-letter {
   overflow: visible !important;
 
-  /*
-    CSS transform 금지
-  */
   transform: none !important;
 
-  /*
-    CSS transition 금지
-  */
   transition: none !important;
 
-  /*
-    모바일 렌더링 문제를 만들던 filter도 없음
-  */
   filter: none !important;
 }
 
@@ -446,12 +415,6 @@ body {
 
 @media (max-width: 600px) {
 
-  /*
-    컨테이너는 화면 전체.
-
-    글자를 담는 영역이 height:auto가 되지 않게 함.
-  */
-
   #svg-container {
     inset: 0;
 
@@ -464,10 +427,8 @@ body {
     justify-content: center;
 
     /*
-      기존 글자 위치 34dvh 유지.
-
-      en_od.svg의 위쪽 viewBox 여백이
-      180이 생겼으므로 그만큼 다시 위로 보정.
+      모바일 전체 기준 위치.
+      한글은 이 위치를 그대로 사용.
     */
     padding-top: 34dvh;
 
@@ -477,15 +438,9 @@ body {
   }
 
 
-  /*
-    en_od의 viewBox 폭 = 755.02
-    위쪽 추가 공간 = 180
-
-    180 / 755.02 × 78vw ≈ 18.6vw
-
-    따라서 실제 글자 위치는
-    예전과 비슷하게 유지됨.
-  */
+  /* ==================================================
+     MOBILE SVG COMMON
+  ================================================== */
 
   #svg-container svg {
     width: 78vw !important;
@@ -494,19 +449,33 @@ body {
     max-width: none !important;
     max-height: none !important;
 
-    margin-top: -18.6vw;
-
     overflow: visible !important;
   }
 
 
-  /*
-    한글 lettering.svg는 viewBox를 늘리지 않았기 때문에
-    위의 -18.6vw 보정을 받으면 안 됨.
-  */
+  /* ==================================================
+     MOBILE KR POSITION
+
+     한글은 현재 위치 그대로.
+  ================================================== */
 
   #svg-container svg:has(#wordGroup) {
     margin-top: 0;
+  }
+
+
+  /* ==================================================
+     MOBILE EN POSITION
+
+     여기 값만 건드리면
+     영문만 위/아래로 이동함.
+
+     - 값이 더 마이너스 = 위로
+     - 값이 0에 가까워짐 = 아래로
+  ================================================== */
+
+  #svg-container svg:has(#englishWordGroup) {
+    margin-top: -10vw;
   }
 
 
