@@ -307,7 +307,18 @@ async function loadKorean(isLanguageSwitch = false) {
     container.innerHTML = svgText;
 
     const svg = container.querySelector("svg");
+    if (isMobile) {
+      const viewBox = svg.viewBox.baseVal;
 
+      const paddingY = 140;
+
+      svg.setAttribute(
+        "viewBox",
+        `${viewBox.x} ${viewBox.y - paddingY} ${viewBox.width} ${viewBox.height + paddingY * 2}`,
+      );
+
+      svg.style.overflow = "visible";
+    }
     if (!svg) {
       throw new Error("SVG를 찾을 수 없습니다.");
     }
