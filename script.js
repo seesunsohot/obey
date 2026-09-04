@@ -3,49 +3,25 @@
 ================================================== */
 
 const container =
-  document.querySelector(
-    "#svg-container"
-  );
+  document.querySelector("#svg-container");
 
 const krLabel =
-  document.querySelector(
-    "#kr-label"
-  );
+  document.querySelector("#kr-label");
 
 const enLabel =
-  document.querySelector(
-    "#en-label"
-  );
+  document.querySelector("#en-label");
 
 const krSwitch =
-  document.querySelector(
-    "#kr-switch"
-  );
+  document.querySelector("#kr-switch");
 
 const enSwitch =
-  document.querySelector(
-    "#en-switch"
-  );
+  document.querySelector("#en-switch");
 
 const musicSwitch =
-  document.querySelector(
-    "#music-switch"
-  );
+  document.querySelector("#music-switch");
 
 const music =
-  document.querySelector(
-    "#music"
-  );
-
-
-/* ==================================================
-   MOBILE CHECK
-================================================== */
-
-const isMobile =
-  window.matchMedia(
-    "(max-width: 600px)"
-  ).matches;
+  document.querySelector("#music");
 
 
 /* ==================================================
@@ -53,41 +29,31 @@ const isMobile =
 ================================================== */
 
 const forwardVideo =
-  document.querySelector(
-    "#bg-video-forward"
-  );
+  document.querySelector("#bg-video-forward");
 
 const reverseVideo =
-  document.querySelector(
-    "#bg-video-reverse"
-  );
+  document.querySelector("#bg-video-reverse");
 
 
 function playForwardVideo() {
 
   reverseVideo.pause();
   reverseVideo.currentTime = 0;
-  reverseVideo.classList.remove(
-    "active"
-  );
+  reverseVideo.classList.remove("active");
 
   forwardVideo.currentTime = 0;
-  forwardVideo.classList.add(
-    "active"
-  );
+  forwardVideo.classList.add("active");
 
   forwardVideo
     .play()
-    .catch(
-      (error) => {
+    .catch((error) => {
 
-        console.error(
-          "정방향 배경 영상 재생 실패:",
-          error
-        );
+      console.error(
+        "정방향 배경 영상 재생 실패:",
+        error
+      );
 
-      }
-    );
+    });
 
 }
 
@@ -96,27 +62,21 @@ function playReverseVideo() {
 
   forwardVideo.pause();
   forwardVideo.currentTime = 0;
-  forwardVideo.classList.remove(
-    "active"
-  );
+  forwardVideo.classList.remove("active");
 
   reverseVideo.currentTime = 0;
-  reverseVideo.classList.add(
-    "active"
-  );
+  reverseVideo.classList.add("active");
 
   reverseVideo
     .play()
-    .catch(
-      (error) => {
+    .catch((error) => {
 
-        console.error(
-          "리버스 배경 영상 재생 실패:",
-          error
-        );
+      console.error(
+        "리버스 배경 영상 재생 실패:",
+        error
+      );
 
-      }
-    );
+    });
 
 }
 
@@ -136,82 +96,81 @@ reverseVideo.addEventListener(
    STATE
 ================================================== */
 
-let activeLanguage =
-  "kr";
+let activeLanguage = "kr";
 
-let koreanMode =
-  "odyssey";
+let koreanMode = "odyssey";
 
-let englishMode =
-  "odysseus";
+let englishMode = "odysseus";
 
-let koreanData =
-  null;
+let koreanData = null;
 
-let englishData =
-  null;
+let englishData = null;
 
-let koreanAnimating =
-  false;
+let koreanAnimating = false;
 
-let englishAnimating =
-  false;
+let englishAnimating = false;
 
-let languageChanging =
-  false;
+let languageChanging = false;
 
-let musicOn =
-  false;
+let musicOn = false;
 
 
 /* ==================================================
-   WAIT
+   UTILS
 ================================================== */
 
 function wait(ms) {
 
   return new Promise(
-    (resolve) =>
-      setTimeout(
-        resolve,
-        ms
-      )
+    (resolve) => setTimeout(resolve, ms)
+  );
+
+}
+
+
+const SVG_NS =
+  "http://www.w3.org/2000/svg";
+
+
+/* ==================================================
+   SMIL CLEANUP
+================================================== */
+
+function removeEnglishAnimations(element) {
+
+  if (!element) {
+    return;
+  }
+
+  const animations =
+    element.querySelectorAll(
+      ':scope > [data-en-animation="true"]'
+    );
+
+  animations.forEach(
+    (animation) => animation.remove()
   );
 
 }
 
 
 /* ==================================================
-   EASING
+   SVG NATIVE TRANSLATE
+
+   CSS transform도 아니고
+   requestAnimationFrame도 아님.
+
+   SVG 자체의 animateTransform 사용.
 ================================================== */
 
-function easeOutQuint(t) {
-
-  return (
-    1 -
-    Math.pow(
-      1 - t,
-      5
-    )
-  );
-
-}
-
-
-/* ==================================================
-   MOBILE SVG ATTRIBUTE ANIMATION
-
-   CSS transform 대신
-   실제 SVG transform attribute를 애니메이션
-================================================== */
-
-function animateSvgTranslate(
+function svgTranslate(
   element,
   fromX,
   fromY,
   toX,
   toY,
-  duration = 1600
+  duration = 1600,
+  delay = 0
 ) {
 
   if (!element) {
@@ -219,68 +178,313 @@ function animateSvgTranslate(
   }
 
 
-  const start =
-    performance.now();
+  removeEnglishAnimations(
+    element
+  );
 
 
-  function frame(now) {
+  /*
+    애니메이션 시작 전 기본 좌표
+  */
 
-    const elapsed =
-      now - start;
-
-
-    const progress =
-      Math.min(
-        elapsed / duration,
-        1
-      );
+  element.setAttribute(
+    "transform",
+    `translate(${fromX} ${fromY})`
+  );
 
 
-    const eased =
-      easeOutQuint(
-        progress
-      );
-
-
-    const x =
-      fromX +
-      (
-        toX -
-        fromX
-      ) *
-      eased;
-
-
-    const y =
-      fromY +
-      (
-        toY -
-        fromY
-      ) *
-      eased;
-
-
-    element.setAttribute(
-      "transform",
-      `translate(${x} ${y})`
+  const animation =
+    document.createElementNS(
+      SVG_NS,
+      "animateTransform"
     );
 
 
-    if (
-      progress < 1
-    ) {
+  animation.setAttribute(
+    "data-en-animation",
+    "true"
+  );
 
-      requestAnimationFrame(
-        frame
+  animation.setAttribute(
+    "attributeName",
+    "transform"
+  );
+
+  animation.setAttribute(
+    "type",
+    "translate"
+  );
+
+  animation.setAttribute(
+    "from",
+    `${fromX} ${fromY}`
+  );
+
+  animation.setAttribute(
+    "to",
+    `${toX} ${toY}`
+  );
+
+  animation.setAttribute(
+    "dur",
+    `${duration}ms`
+  );
+
+  /*
+    직접 beginElement()로 시작하기 위해
+    indefinite 사용
+  */
+
+  animation.setAttribute(
+    "begin",
+    "indefinite"
+  );
+
+  animation.setAttribute(
+    "fill",
+    "freeze"
+  );
+
+  /*
+    기존 cubic-bezier와 비슷한 easing
+  */
+
+  animation.setAttribute(
+    "calcMode",
+    "spline"
+  );
+
+  animation.setAttribute(
+    "keyTimes",
+    "0;1"
+  );
+
+  animation.setAttribute(
+    "keySplines",
+    "0.22 1 0.36 1"
+  );
+
+
+  element.appendChild(
+    animation
+  );
+
+
+  setTimeout(
+    () => {
+
+      if (!animation.isConnected) {
+        return;
+      }
+
+      try {
+
+        animation.beginElement();
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "SVG 이동 애니메이션 시작 실패:",
+          error
+        );
+
+      }
+
+    },
+    delay
+  );
+
+
+  /*
+    애니메이션이 끝난 뒤
+    최종 좌표를 실제 transform으로 고정하고
+    animateTransform 제거.
+  */
+
+  setTimeout(
+    () => {
+
+      if (!element.isConnected) {
+        return;
+      }
+
+
+      element.setAttribute(
+        "transform",
+        `translate(${toX} ${toY})`
       );
 
-    }
 
+      if (animation.isConnected) {
+
+        animation.remove();
+
+      }
+
+    },
+    delay + duration + 40
+  );
+
+}
+
+
+/* ==================================================
+   SVG NATIVE OPACITY
+================================================== */
+
+function svgOpacity(
+  element,
+  from,
+  to,
+  duration = 1450,
+  delay = 0
+) {
+
+  if (!element) {
+    return;
   }
 
 
-  requestAnimationFrame(
-    frame
+  /*
+    opacity용 기존 애니메이션만 제거
+  */
+
+  const oldAnimations =
+    element.querySelectorAll(
+      ':scope > animate[data-en-opacity="true"]'
+    );
+
+
+  oldAnimations.forEach(
+    (animation) => animation.remove()
+  );
+
+
+  element.setAttribute(
+    "opacity",
+    from
+  );
+
+
+  const animation =
+    document.createElementNS(
+      SVG_NS,
+      "animate"
+    );
+
+
+  animation.setAttribute(
+    "data-en-animation",
+    "true"
+  );
+
+  animation.setAttribute(
+    "data-en-opacity",
+    "true"
+  );
+
+  animation.setAttribute(
+    "attributeName",
+    "opacity"
+  );
+
+  animation.setAttribute(
+    "from",
+    from
+  );
+
+  animation.setAttribute(
+    "to",
+    to
+  );
+
+  animation.setAttribute(
+    "dur",
+    `${duration}ms`
+  );
+
+  animation.setAttribute(
+    "begin",
+    "indefinite"
+  );
+
+  animation.setAttribute(
+    "fill",
+    "freeze"
+  );
+
+  animation.setAttribute(
+    "calcMode",
+    "spline"
+  );
+
+  animation.setAttribute(
+    "keyTimes",
+    "0;1"
+  );
+
+  animation.setAttribute(
+    "keySplines",
+    "0.22 1 0.36 1"
+  );
+
+
+  element.appendChild(
+    animation
+  );
+
+
+  setTimeout(
+    () => {
+
+      if (!animation.isConnected) {
+        return;
+      }
+
+      try {
+
+        animation.beginElement();
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "SVG opacity 애니메이션 시작 실패:",
+          error
+        );
+
+      }
+
+    },
+    delay
+  );
+
+
+  setTimeout(
+    () => {
+
+      if (!element.isConnected) {
+        return;
+      }
+
+
+      element.setAttribute(
+        "opacity",
+        to
+      );
+
+
+      if (animation.isConnected) {
+
+        animation.remove();
+
+      }
+
+    },
+    delay + duration + 40
   );
 
 }
@@ -292,7 +496,6 @@ function animateSvgTranslate(
 
 musicSwitch.addEventListener(
   "click",
-
   async () => {
 
     if (!musicOn) {
@@ -301,8 +504,7 @@ musicSwitch.addEventListener(
 
         await music.play();
 
-        musicOn =
-          true;
+        musicOn = true;
 
         musicSwitch.classList.add(
           "is-on"
@@ -325,8 +527,7 @@ musicSwitch.addEventListener(
 
       music.pause();
 
-      musicOn =
-        false;
+      musicOn = false;
 
       musicSwitch.classList.remove(
         "is-on"
@@ -345,8 +546,7 @@ musicSwitch.addEventListener(
 function updateLanguageUI() {
 
   if (
-    activeLanguage ===
-    "kr"
+    activeLanguage === "kr"
   ) {
 
     krLabel.classList.add(
@@ -383,22 +583,14 @@ async function changeLanguage(
 ) {
 
   if (
-    languageChanging
+    languageChanging ||
+    activeLanguage === language
   ) {
     return;
   }
 
 
-  if (
-    activeLanguage ===
-    language
-  ) {
-    return;
-  }
-
-
-  languageChanging =
-    true;
+  languageChanging = true;
 
 
   container.classList.add(
@@ -406,9 +598,7 @@ async function changeLanguage(
   );
 
 
-  await wait(
-    560
-  );
+  await wait(560);
 
 
   activeLanguage =
@@ -419,8 +609,7 @@ async function changeLanguage(
 
 
   if (
-    language ===
-    "en"
+    language === "en"
   ) {
 
     englishMode =
@@ -434,21 +623,16 @@ async function changeLanguage(
 
 
   if (
-    language ===
-    "kr"
+    language === "kr"
   ) {
 
-    await loadKorean(
-      true
-    );
+    await loadKorean(true);
 
   }
 
   else {
 
-    await loadEnglish(
-      true
-    );
+    await loadEnglish(true);
 
   }
 
@@ -482,13 +666,10 @@ async function changeLanguage(
   );
 
 
-  await wait(
-    1200
-  );
+  await wait(1200);
 
 
-  languageChanging =
-    false;
+  languageChanging = false;
 
 }
 
@@ -499,27 +680,13 @@ async function changeLanguage(
 
 krLabel.addEventListener(
   "click",
-
-  () => {
-
-    changeLanguage(
-      "kr"
-    );
-
-  }
+  () => changeLanguage("kr")
 );
 
 
 enLabel.addEventListener(
   "click",
-
-  () => {
-
-    changeLanguage(
-      "en"
-    );
-
-  }
+  () => changeLanguage("en")
 );
 
 
@@ -529,18 +696,13 @@ enLabel.addEventListener(
 
 krSwitch.addEventListener(
   "click",
-
   async () => {
 
     if (
-      activeLanguage !==
-      "kr"
+      activeLanguage !== "kr"
     ) {
 
-      await changeLanguage(
-        "kr"
-      );
-
+      await changeLanguage("kr");
       return;
 
     }
@@ -558,18 +720,13 @@ krSwitch.addEventListener(
 
 enSwitch.addEventListener(
   "click",
-
   async () => {
 
     if (
-      activeLanguage !==
-      "en"
+      activeLanguage !== "en"
     ) {
 
-      await changeLanguage(
-        "en"
-      );
-
+      await changeLanguage("en");
       return;
 
     }
@@ -589,9 +746,7 @@ async function loadKorean(
   isLanguageSwitch = false
 ) {
 
-  if (
-    !isLanguageSwitch
-  ) {
+  if (!isLanguageSwitch) {
 
     container.classList.add(
       "is-loading"
@@ -626,9 +781,7 @@ async function loadKorean(
 
 
     const svg =
-      container.querySelector(
-        "svg"
-      );
+      container.querySelector("svg");
 
 
     if (!svg) {
@@ -640,14 +793,10 @@ async function loadKorean(
     }
 
 
-    setupKorean(
-      svg
-    );
+    setupKorean(svg);
 
 
-    if (
-      !isLanguageSwitch
-    ) {
+    if (!isLanguageSwitch) {
 
       requestAnimationFrame(
         () => {
@@ -671,10 +820,7 @@ async function loadKorean(
 
   catch (error) {
 
-    console.error(
-      error
-    );
-
+    console.error(error);
 
     container.classList.remove(
       "is-loading"
@@ -689,39 +835,25 @@ async function loadKorean(
    KR SETUP
 ================================================== */
 
-function setupKorean(
-  svg
-) {
+function setupKorean(svg) {
 
   const letter01 =
-    svg.querySelector(
-      "#letter01"
-    );
+    svg.querySelector("#letter01");
 
   const letter02 =
-    svg.querySelector(
-      "#letter02"
-    );
+    svg.querySelector("#letter02");
 
   const letter03 =
-    svg.querySelector(
-      "#letter03"
-    );
+    svg.querySelector("#letter03");
 
   const letter04 =
-    svg.querySelector(
-      "#letter04"
-    );
+    svg.querySelector("#letter04");
 
   const letter05 =
-    svg.querySelector(
-      "#letter05"
-    );
+    svg.querySelector("#letter05");
 
   const letter06 =
-    svg.querySelector(
-      "#letter06"
-    );
+    svg.querySelector("#letter06");
 
 
   const letters = [
@@ -736,8 +868,7 @@ function setupKorean(
 
   if (
     letters.some(
-      (letter) =>
-        !letter
+      (letter) => !letter
     )
   ) {
 
@@ -746,10 +877,6 @@ function setupKorean(
     );
 
   }
-
-
-  const SVG_NS =
-    "http://www.w3.org/2000/svg";
 
 
   const wordGroup =
@@ -779,8 +906,7 @@ function setupKorean(
   );
 
 
-  const GAP =
-    25;
+  const GAP = 25;
 
 
   const seBox =
@@ -800,12 +926,10 @@ function setupKorean(
 
   const iFinalY =
     seBox.y +
-    seBox.height /
-    2 -
+    seBox.height / 2 -
     (
       iBox.y +
-      iBox.height /
-      2
+      iBox.height / 2
     );
 
 
@@ -817,8 +941,7 @@ function setupKorean(
 
     return (
       viewBox.x +
-      viewBox.width /
-      2
+      viewBox.width / 2
     );
 
   }
@@ -852,8 +975,7 @@ function setupKorean(
         maxX =
           Math.max(
             maxX,
-            box.x +
-            box.width
+            box.x + box.width
           );
 
       }
@@ -861,14 +983,8 @@ function setupKorean(
 
 
     return {
-
-      x:
-        minX,
-
-      width:
-        maxX -
-        minX,
-
+      x: minX,
+      width: maxX - minX,
     };
 
   }
@@ -888,8 +1004,7 @@ function setupKorean(
 
   const odysseusCenter =
     odysseusBox.x +
-    odysseusBox.width /
-    2;
+    odysseusBox.width / 2;
 
 
   const odysseusShift =
@@ -928,15 +1043,9 @@ function setupKorean(
 
   const odysseyEnd =
     Math.max(
-      box01.x +
-      box01.width,
-
-      box02.x +
-      box02.width,
-
-      box03.x +
-      box03.width,
-
+      box01.x + box01.width,
+      box02.x + box02.width,
+      box03.x + box03.width,
       iFinalRight
     );
 
@@ -945,8 +1054,7 @@ function setupKorean(
     (
       odysseyStart +
       odysseyEnd
-    ) /
-    2;
+    ) / 2;
 
 
   const odysseyShift =
@@ -972,8 +1080,7 @@ function setupKorean(
 
 
   if (
-    koreanMode ===
-    "odyssey"
+    koreanMode === "odyssey"
   ) {
 
     showOdysseyInstant();
@@ -1001,12 +1108,10 @@ function restoreKoreanTransitions() {
 
 
   const {
-
     letter04,
     letter05,
     letter06,
     wordGroup,
-
   } =
     koreanData;
 
@@ -1036,7 +1141,7 @@ function restoreKoreanTransitions() {
 
 
 /* ==================================================
-   ODYSSEY INITIAL
+   KR ODYSSEY INITIAL
 ================================================== */
 
 function showOdysseyInstant() {
@@ -1047,18 +1152,13 @@ function showOdysseyInstant() {
 
 
   const {
-
     letter04,
     letter05,
     letter06,
-
     wordGroup,
-
     iFinalX,
     iFinalY,
-
     odysseyShift,
-
   } =
     koreanData;
 
@@ -1106,16 +1206,11 @@ function showOdysseyInstant() {
     "blur(0px)";
 
   letter06.style.transform =
-    `translate(
-      ${iFinalX}px,
-      ${iFinalY}px
-    )`;
+    `translate(${iFinalX}px, ${iFinalY}px)`;
 
 
   wordGroup.style.transform =
-    `translateX(
-      ${odysseyShift}px
-    )`;
+    `translateX(${odysseyShift}px)`;
 
 
   krSwitch.classList.remove(
@@ -1141,7 +1236,7 @@ function showOdysseyInstant() {
 
 
 /* ==================================================
-   ODYSSEUS INITIAL
+   KR ODYSSEUS INITIAL
 ================================================== */
 
 function showOdysseusInstant() {
@@ -1152,18 +1247,13 @@ function showOdysseusInstant() {
 
 
   const {
-
     letter04,
     letter05,
     letter06,
-
     wordGroup,
-
     iFinalX,
     iFinalY,
-
     odysseusShift,
-
   } =
     koreanData;
 
@@ -1208,16 +1298,11 @@ function showOdysseusInstant() {
     "blur(8px)";
 
   letter06.style.transform =
-    `translate(
-      ${iFinalX}px,
-      ${iFinalY + 150}px
-    )`;
+    `translate(${iFinalX}px, ${iFinalY + 150}px)`;
 
 
   wordGroup.style.transform =
-    `translateX(
-      ${odysseusShift}px
-    )`;
+    `translateX(${odysseusShift}px)`;
 
 
   krSwitch.classList.add(
@@ -1244,6 +1329,7 @@ function showOdysseusInstant() {
 
 /* ==================================================
    KR TOGGLE
+   기존 방식 유지
 ================================================== */
 
 function toggleKorean() {
@@ -1257,31 +1343,24 @@ function toggleKorean() {
   }
 
 
-  koreanAnimating =
-    true;
+  koreanAnimating = true;
 
 
   const {
-
     letter04,
     letter05,
     letter06,
-
     wordGroup,
-
     iFinalX,
     iFinalY,
-
     odysseyShift,
     odysseusShift,
-
   } =
     koreanData;
 
 
   if (
-    koreanMode ===
-    "odyssey"
+    koreanMode === "odyssey"
   ) {
 
     koreanMode =
@@ -1294,16 +1373,11 @@ function toggleKorean() {
 
 
     wordGroup.style.transform =
-      `translateX(
-        ${odysseusShift}px
-      )`;
+      `translateX(${odysseusShift}px)`;
 
 
     letter06.style.transform =
-      `translate(
-        ${iFinalX}px,
-        ${iFinalY + 150}px
-      )`;
+      `translate(${iFinalX}px, ${iFinalY + 150}px)`;
 
     letter06.style.opacity =
       "0";
@@ -1359,9 +1433,7 @@ function toggleKorean() {
 
 
     wordGroup.style.transform =
-      `translateX(
-        ${odysseyShift}px
-      )`;
+      `translateX(${odysseyShift}px)`;
 
 
     letter04.style.transform =
@@ -1395,10 +1467,7 @@ function toggleKorean() {
       () => {
 
         letter06.style.transform =
-          `translate(
-            ${iFinalX}px,
-            ${iFinalY}px
-          )`;
+          `translate(${iFinalX}px, ${iFinalY}px)`;
 
         letter06.style.opacity =
           "1";
@@ -1416,8 +1485,7 @@ function toggleKorean() {
   setTimeout(
     () => {
 
-      koreanAnimating =
-        false;
+      koreanAnimating = false;
 
     },
     1750
@@ -1434,9 +1502,7 @@ async function loadEnglish(
   isLanguageSwitch = false
 ) {
 
-  if (
-    !isLanguageSwitch
-  ) {
+  if (!isLanguageSwitch) {
 
     container.classList.add(
       "is-loading"
@@ -1453,15 +1519,8 @@ async function loadEnglish(
     ] =
       await Promise.all(
         [
-
-          fetch(
-            "./img/en_od.svg"
-          ),
-
-          fetch(
-            "./img/en_ob.svg"
-          ),
-
+          fetch("./img/en_od.svg"),
+          fetch("./img/en_ob.svg"),
         ]
       );
 
@@ -1484,11 +1543,8 @@ async function loadEnglish(
     ] =
       await Promise.all(
         [
-
           odResponse.text(),
-
           obResponse.text(),
-
         ]
       );
 
@@ -1498,9 +1554,7 @@ async function loadEnglish(
 
 
     const svg =
-      container.querySelector(
-        "svg"
-      );
+      container.querySelector("svg");
 
 
     if (!svg) {
@@ -1510,6 +1564,19 @@ async function loadEnglish(
       );
 
     }
+
+
+    /*
+      확실하게 overflow visible
+    */
+
+    svg.setAttribute(
+      "overflow",
+      "visible"
+    );
+
+    svg.style.overflow =
+      "visible";
 
 
     const parser =
@@ -1524,50 +1591,32 @@ async function loadEnglish(
 
 
     const obSvg =
-      obDocument.querySelector(
-        "svg"
-      );
+      obDocument.querySelector("svg");
 
 
     const O =
-      svg.querySelector(
-        "#letter_O"
-      );
+      svg.querySelector("#letter_O");
 
     const D =
-      svg.querySelector(
-        "#letter_D"
-      );
+      svg.querySelector("#letter_D");
 
     const Y =
-      svg.querySelector(
-        "#letter_Y"
-      );
+      svg.querySelector("#letter_Y");
 
     const S =
-      svg.querySelector(
-        "#letter_S"
-      );
+      svg.querySelector("#letter_S");
 
     const S2 =
-      svg.querySelector(
-        "#letter_S2"
-      );
+      svg.querySelector("#letter_S2");
 
     const E =
-      svg.querySelector(
-        "#letter_E"
-      );
+      svg.querySelector("#letter_E");
 
     const U =
-      svg.querySelector(
-        "#letter_U"
-      );
+      svg.querySelector("#letter_U");
 
     const S1 =
-      svg.querySelector(
-        "#letter_S1"
-      );
+      svg.querySelector("#letter_S1");
 
 
     const odLetters = [
@@ -1584,8 +1633,7 @@ async function loadEnglish(
 
     if (
       odLetters.some(
-        (letter) =>
-          !letter
+        (letter) => !letter
       )
     ) {
 
@@ -1596,6 +1644,11 @@ async function loadEnglish(
     }
 
 
+    /*
+      기존 CSS transform 흔적을
+      완전히 제거
+    */
+
     odLetters.forEach(
       (letter) => {
 
@@ -1603,14 +1656,30 @@ async function loadEnglish(
           "en-letter"
         );
 
+        letter.style.transform =
+          "";
+
+        letter.style.transition =
+          "";
+
+        letter.style.filter =
+          "";
+
+        letter.removeAttribute(
+          "transform"
+        );
+
+        letter.setAttribute(
+          "opacity",
+          "1"
+        );
+
       }
     );
 
 
     const obB =
-      obSvg.querySelector(
-        "#letter_B"
-      );
+      obSvg.querySelector("#letter_B");
 
 
     if (!obB) {
@@ -1638,13 +1707,17 @@ async function loadEnglish(
     );
 
 
-    svg.appendChild(
-      B
-    );
+    B.style.transform =
+      "";
+
+    B.style.transition =
+      "";
+
+    B.style.filter =
+      "";
 
 
-    const SVG_NS =
-      "http://www.w3.org/2000/svg";
+    svg.appendChild(B);
 
 
     const englishWordGroup =
@@ -1656,6 +1729,12 @@ async function loadEnglish(
 
     englishWordGroup.id =
       "englishWordGroup";
+
+
+    englishWordGroup.setAttribute(
+      "overflow",
+      "visible"
+    );
 
 
     [
@@ -1701,14 +1780,12 @@ async function loadEnglish(
     const obeyOffsetX =
       (
         odViewBox.x +
-        odViewBox.width /
-        2
+        odViewBox.width / 2
       )
       -
       (
         obViewBox.x +
-        obViewBox.width /
-        2
+        obViewBox.width / 2
       );
 
 
@@ -1801,9 +1878,7 @@ async function loadEnglish(
     showEnglishOdysseusInstant();
 
 
-    if (
-      !isLanguageSwitch
-    ) {
+    if (!isLanguageSwitch) {
 
       requestAnimationFrame(
         () => {
@@ -1827,10 +1902,7 @@ async function loadEnglish(
 
   catch (error) {
 
-    console.error(
-      error
-    );
-
+    console.error(error);
 
     container.classList.remove(
       "is-loading"
@@ -1850,9 +1922,7 @@ function getObeyBoxes(
 ) {
 
   const holder =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
 
   holder.style.position =
@@ -1870,6 +1940,7 @@ function getObeyBoxes(
   holder.style.pointerEvents =
     "none";
 
+
   holder.innerHTML =
     svgText;
 
@@ -1880,30 +1951,20 @@ function getObeyBoxes(
 
 
   const svg =
-    holder.querySelector(
-      "svg"
-    );
+    holder.querySelector("svg");
 
 
   const O =
-    svg.querySelector(
-      "#letter_O"
-    );
+    svg.querySelector("#letter_O");
 
   const B =
-    svg.querySelector(
-      "#letter_B"
-    );
+    svg.querySelector("#letter_B");
 
   const E =
-    svg.querySelector(
-      "#letter_E"
-    );
+    svg.querySelector("#letter_E");
 
   const Y =
-    svg.querySelector(
-      "#letter_Y"
-    );
+    svg.querySelector("#letter_Y");
 
 
   if (
@@ -1915,7 +1976,6 @@ function getObeyBoxes(
 
     holder.remove();
 
-
     throw new Error(
       "OBEY의 O/B/E/Y를 찾지 못했습니다."
     );
@@ -1923,47 +1983,27 @@ function getObeyBoxes(
   }
 
 
-  function copyBox(
-    element
-  ) {
+  function copyBox(element) {
 
     const box =
       element.getBBox();
 
 
     return {
-
-      x:
-        box.x,
-
-      y:
-        box.y,
-
-      width:
-        box.width,
-
-      height:
-        box.height,
-
+      x: box.x,
+      y: box.y,
+      width: box.width,
+      height: box.height,
     };
 
   }
 
 
   const result = {
-
-    O:
-      copyBox(O),
-
-    B:
-      copyBox(B),
-
-    E:
-      copyBox(E),
-
-    Y:
-      copyBox(Y),
-
+    O: copyBox(O),
+    B: copyBox(B),
+    E: copyBox(E),
+    Y: copyBox(Y),
   };
 
 
@@ -1987,7 +2027,6 @@ function showEnglishOdysseusInstant() {
 
 
   const {
-
     O,
     D,
     Y,
@@ -1997,15 +2036,13 @@ function showEnglishOdysseusInstant() {
     U,
     S1,
     B,
-
     targetBX,
     targetBY,
-
   } =
     englishData;
 
 
-  const all = [
+  const letters = [
     O,
     D,
     Y,
@@ -2018,18 +2055,21 @@ function showEnglishOdysseusInstant() {
   ];
 
 
-  all.forEach(
+  letters.forEach(
     (letter) => {
 
-      letter.style.transition =
-        "none";
+      removeEnglishAnimations(
+        letter
+      );
 
       letter.style.transform =
-        "none";
+        "";
 
-      letter.removeAttribute(
-        "transform"
-      );
+      letter.style.transition =
+        "";
+
+      letter.style.filter =
+        "";
 
     }
   );
@@ -2047,49 +2087,33 @@ function showEnglishOdysseusInstant() {
   ].forEach(
     (letter) => {
 
-      letter.style.opacity =
-        "1";
+      letter.setAttribute(
+        "transform",
+        "translate(0 0)"
+      );
 
-      letter.style.filter =
-        "none";
+      letter.setAttribute(
+        "opacity",
+        "1"
+      );
 
     }
   );
 
 
-  B.style.opacity =
-    "0";
+  B.setAttribute(
+    "transform",
+    `translate(
+      ${targetBX}
+      ${targetBY + 120}
+    )`
+  );
 
 
-  B.style.filter =
-    isMobile
-      ? "none"
-      : "blur(10px)";
-
-
-  if (
-    isMobile
-  ) {
-
-    B.setAttribute(
-      "transform",
-      `translate(
-        ${targetBX}
-        ${targetBY + 120}
-      )`
-    );
-
-  }
-
-  else {
-
-    B.style.transform =
-      `translate(
-        ${targetBX}px,
-        ${targetBY + 120}px
-      )`;
-
-  }
+  B.setAttribute(
+    "opacity",
+    "0"
+  );
 
 
   englishMode =
@@ -2100,91 +2124,13 @@ function showEnglishOdysseusInstant() {
     "is-on"
   );
 
-
-  if (
-    !isMobile
-  ) {
-
-    requestAnimationFrame(
-      () => {
-
-        requestAnimationFrame(
-          () => {
-
-            restoreEnglishTransitions();
-
-          }
-        );
-
-      }
-    );
-
-  }
-
-}
-
-
-/* ==================================================
-   EN TRANSITIONS
-================================================== */
-
-function restoreEnglishTransitions() {
-
-  if (
-    !englishData
-  ) {
-    return;
-  }
-
-
-  const {
-
-    O,
-    D,
-    Y,
-    S,
-    S2,
-    E,
-    U,
-    S1,
-    B,
-
-  } =
-    englishData;
-
-
-  const transition =
-    `
-      transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 1.45s ease,
-      filter 1.45s ease
-    `;
-
-
-  [
-    O,
-    D,
-    Y,
-    S,
-    S2,
-    E,
-    U,
-    S1,
-    B,
-  ].forEach(
-    (letter) => {
-
-      letter.style.transition =
-        transition;
-
-    }
-  );
-
 }
 
 
 /* ==================================================
    EN TOGGLE
+
+   전부 SVG NATIVE SMIL
 ================================================== */
 
 function toggleEnglish() {
@@ -2203,7 +2149,6 @@ function toggleEnglish() {
 
 
   const {
-
     O,
     D,
     Y,
@@ -2225,356 +2170,16 @@ function toggleEnglish() {
 
     targetBX,
     targetBY,
-
   } =
     englishData;
 
 
   /* ==================================================
-     MOBILE
+     ODYSSEUS -> OBEY
   ================================================== */
 
   if (
-    isMobile
-  ) {
-
-    if (
-      englishMode ===
-      "odysseus"
-    ) {
-
-      englishMode =
-        "obey";
-
-
-      enSwitch.classList.add(
-        "is-on"
-      );
-
-
-      animateSvgTranslate(
-        O,
-        0,
-        0,
-        targetOX,
-        targetOY,
-        1600
-      );
-
-
-      animateSvgTranslate(
-        E,
-        0,
-        0,
-        targetEX,
-        targetEY,
-        1600
-      );
-
-
-      animateSvgTranslate(
-        Y,
-        0,
-        0,
-        targetYX,
-        targetYY,
-        1600
-      );
-
-
-      animateSvgTranslate(
-        D,
-        0,
-        0,
-        0,
-        -140,
-        1600
-      );
-
-      D.style.opacity =
-        "0";
-
-
-      animateSvgTranslate(
-        S,
-        0,
-        0,
-        0,
-        150,
-        1600
-      );
-
-      S.style.opacity =
-        "0";
-
-
-      setTimeout(
-        () => {
-
-          animateSvgTranslate(
-            S2,
-            0,
-            0,
-            0,
-            -150,
-            1600
-          );
-
-          S2.style.opacity =
-            "0";
-
-        },
-        70
-      );
-
-
-      setTimeout(
-        () => {
-
-          animateSvgTranslate(
-            U,
-            0,
-            0,
-            0,
-            160,
-            1600
-          );
-
-          U.style.opacity =
-            "0";
-
-        },
-        130
-      );
-
-
-      setTimeout(
-        () => {
-
-          animateSvgTranslate(
-            S1,
-            0,
-            0,
-            0,
-            -160,
-            1600
-          );
-
-          S1.style.opacity =
-            "0";
-
-        },
-        190
-      );
-
-
-      setTimeout(
-        () => {
-
-          B.style.opacity =
-            "1";
-
-
-          animateSvgTranslate(
-            B,
-            targetBX,
-            targetBY + 120,
-            targetBX,
-            targetBY,
-            1600
-          );
-
-        },
-        300
-      );
-
-    }
-
-    else {
-
-      englishMode =
-        "odysseus";
-
-
-      enSwitch.classList.remove(
-        "is-on"
-      );
-
-
-      B.style.opacity =
-        "0";
-
-
-      animateSvgTranslate(
-        B,
-        targetBX,
-        targetBY,
-        targetBX,
-        targetBY + 120,
-        1600
-      );
-
-
-      animateSvgTranslate(
-        O,
-        targetOX,
-        targetOY,
-        0,
-        0,
-        1600
-      );
-
-
-      animateSvgTranslate(
-        E,
-        targetEX,
-        targetEY,
-        0,
-        0,
-        1600
-      );
-
-
-      animateSvgTranslate(
-        Y,
-        targetYX,
-        targetYY,
-        0,
-        0,
-        1600
-      );
-
-
-      setTimeout(
-        () => {
-
-          D.style.opacity =
-            "1";
-
-
-          animateSvgTranslate(
-            D,
-            0,
-            -140,
-            0,
-            0,
-            1600
-          );
-
-        },
-        180
-      );
-
-
-      setTimeout(
-        () => {
-
-          S.style.opacity =
-            "1";
-
-
-          animateSvgTranslate(
-            S,
-            0,
-            150,
-            0,
-            0,
-            1600
-          );
-
-        },
-        230
-      );
-
-
-      setTimeout(
-        () => {
-
-          S2.style.opacity =
-            "1";
-
-
-          animateSvgTranslate(
-            S2,
-            0,
-            -150,
-            0,
-            0,
-            1600
-          );
-
-        },
-        280
-      );
-
-
-      setTimeout(
-        () => {
-
-          U.style.opacity =
-            "1";
-
-
-          animateSvgTranslate(
-            U,
-            0,
-            160,
-            0,
-            0,
-            1600
-          );
-
-        },
-        330
-      );
-
-
-      setTimeout(
-        () => {
-
-          S1.style.opacity =
-            "1";
-
-
-          animateSvgTranslate(
-            S1,
-            0,
-            -160,
-            0,
-            0,
-            1600
-          );
-
-        },
-        380
-      );
-
-    }
-
-
-    setTimeout(
-      () => {
-
-        englishAnimating =
-          false;
-
-      },
-      1900
-    );
-
-
-    return;
-
-  }
-
-
-  /* ==================================================
-     DESKTOP
-  ================================================== */
-
-  if (
-    englishMode ===
-    "odysseus"
+    englishMode === "odysseus"
   ) {
 
     englishMode =
@@ -2586,118 +2191,170 @@ function toggleEnglish() {
     );
 
 
-    O.style.transform =
-      `translate(
-        ${targetOX}px,
-        ${targetOY}px
-      )`;
+    /*
+      O / E / Y가 OBEY 자리로 이동
+    */
+
+    svgTranslate(
+      O,
+      0,
+      0,
+      targetOX,
+      targetOY,
+      1600,
+      0
+    );
 
 
-    E.style.transform =
-      `translate(
-        ${targetEX}px,
-        ${targetEY}px
-      )`;
+    svgTranslate(
+      E,
+      0,
+      0,
+      targetEX,
+      targetEY,
+      1600,
+      0
+    );
 
 
-    Y.style.transform =
-      `translate(
-        ${targetYX}px,
-        ${targetYY}px
-      )`;
+    svgTranslate(
+      Y,
+      0,
+      0,
+      targetYX,
+      targetYY,
+      1600,
+      0
+    );
 
 
-    D.style.transform =
-      "translateY(-140px)";
+    /*
+      사라지는 글자들
+    */
 
-    D.style.opacity =
-      "0";
+    svgTranslate(
+      D,
+      0,
+      0,
+      0,
+      -140,
+      1600,
+      0
+    );
 
-    D.style.filter =
-      "blur(10px)";
+    svgOpacity(
+      D,
+      1,
+      0,
+      1450,
+      0
+    );
 
 
-    S.style.transform =
-      "translateY(150px)";
+    svgTranslate(
+      S,
+      0,
+      0,
+      0,
+      150,
+      1600,
+      0
+    );
 
-    S.style.opacity =
-      "0";
+    svgOpacity(
+      S,
+      1,
+      0,
+      1450,
+      0
+    );
 
-    S.style.filter =
-      "blur(10px)";
 
+    svgTranslate(
+      S2,
+      0,
+      0,
+      0,
+      -150,
+      1600,
+      70
+    );
 
-    setTimeout(
-      () => {
-
-        S2.style.transform =
-          "translateY(-150px)";
-
-        S2.style.opacity =
-          "0";
-
-        S2.style.filter =
-          "blur(10px)";
-
-      },
+    svgOpacity(
+      S2,
+      1,
+      0,
+      1450,
       70
     );
 
 
-    setTimeout(
-      () => {
+    svgTranslate(
+      U,
+      0,
+      0,
+      0,
+      160,
+      1600,
+      130
+    );
 
-        U.style.transform =
-          "translateY(160px)";
-
-        U.style.opacity =
-          "0";
-
-        U.style.filter =
-          "blur(10px)";
-
-      },
+    svgOpacity(
+      U,
+      1,
+      0,
+      1450,
       130
     );
 
 
-    setTimeout(
-      () => {
+    svgTranslate(
+      S1,
+      0,
+      0,
+      0,
+      -160,
+      1600,
+      190
+    );
 
-        S1.style.transform =
-          "translateY(-160px)";
-
-        S1.style.opacity =
-          "0";
-
-        S1.style.filter =
-          "blur(10px)";
-
-      },
+    svgOpacity(
+      S1,
+      1,
+      0,
+      1450,
       190
     );
 
 
-    setTimeout(
-      () => {
+    /*
+      B 등장
+    */
 
-        B.style.transform =
-          `translate(
-            ${targetBX}px,
-            ${targetBY}px
-          )`;
+    svgTranslate(
+      B,
+      targetBX,
+      targetBY + 120,
+      targetBX,
+      targetBY,
+      1600,
+      300
+    );
 
-        B.style.opacity =
-          "1";
-
-        B.style.filter =
-          "blur(0px)";
-
-      },
+    svgOpacity(
+      B,
+      0,
+      1,
+      1450,
       300
     );
 
   }
+
+
+  /* ==================================================
+     OBEY -> ODYSSEUS
+  ================================================== */
 
   else {
 
@@ -2710,115 +2367,173 @@ function toggleEnglish() {
     );
 
 
-    B.style.transform =
-      `translate(
-        ${targetBX}px,
-        ${targetBY + 120}px
-      )`;
+    /*
+      B 퇴장
+    */
 
-    B.style.opacity =
-      "0";
+    svgTranslate(
+      B,
+      targetBX,
+      targetBY,
+      targetBX,
+      targetBY + 120,
+      1600,
+      0
+    );
 
-    B.style.filter =
-      "blur(10px)";
+    svgOpacity(
+      B,
+      1,
+      0,
+      1450,
+      0
+    );
 
 
-    O.style.transform =
-      "translate(0px, 0px)";
+    /*
+      O / E / Y 원위치
+    */
 
-    E.style.transform =
-      "translate(0px, 0px)";
+    svgTranslate(
+      O,
+      targetOX,
+      targetOY,
+      0,
+      0,
+      1600,
+      0
+    );
 
-    Y.style.transform =
-      "translate(0px, 0px)";
+
+    svgTranslate(
+      E,
+      targetEX,
+      targetEY,
+      0,
+      0,
+      1600,
+      0
+    );
 
 
-    setTimeout(
-      () => {
+    svgTranslate(
+      Y,
+      targetYX,
+      targetYY,
+      0,
+      0,
+      1600,
+      0
+    );
 
-        D.style.transform =
-          "translateY(0px)";
 
-        D.style.opacity =
-          "1";
+    /*
+      글자들 복귀
+    */
 
-        D.style.filter =
-          "blur(0px)";
+    svgTranslate(
+      D,
+      0,
+      -140,
+      0,
+      0,
+      1600,
+      180
+    );
 
-      },
+    svgOpacity(
+      D,
+      0,
+      1,
+      1450,
       180
     );
 
 
-    setTimeout(
-      () => {
+    svgTranslate(
+      S,
+      0,
+      150,
+      0,
+      0,
+      1600,
+      230
+    );
 
-        S.style.transform =
-          "translateY(0px)";
-
-        S.style.opacity =
-          "1";
-
-        S.style.filter =
-          "blur(0px)";
-
-      },
+    svgOpacity(
+      S,
+      0,
+      1,
+      1450,
       230
     );
 
 
-    setTimeout(
-      () => {
+    svgTranslate(
+      S2,
+      0,
+      -150,
+      0,
+      0,
+      1600,
+      280
+    );
 
-        S2.style.transform =
-          "translateY(0px)";
-
-        S2.style.opacity =
-          "1";
-
-        S2.style.filter =
-          "blur(0px)";
-
-      },
+    svgOpacity(
+      S2,
+      0,
+      1,
+      1450,
       280
     );
 
 
-    setTimeout(
-      () => {
+    svgTranslate(
+      U,
+      0,
+      160,
+      0,
+      0,
+      1600,
+      330
+    );
 
-        U.style.transform =
-          "translateY(0px)";
-
-        U.style.opacity =
-          "1";
-
-        U.style.filter =
-          "blur(0px)";
-
-      },
+    svgOpacity(
+      U,
+      0,
+      1,
+      1450,
       330
     );
 
 
-    setTimeout(
-      () => {
+    svgTranslate(
+      S1,
+      0,
+      -160,
+      0,
+      0,
+      1600,
+      380
+    );
 
-        S1.style.transform =
-          "translateY(0px)";
-
-        S1.style.opacity =
-          "1";
-
-        S1.style.filter =
-          "blur(0px)";
-
-      },
+    svgOpacity(
+      S1,
+      0,
+      1,
+      1450,
       380
     );
 
   }
 
+
+  /*
+    가장 늦게 끝나는 애니메이션:
+    380ms + 1600ms = 1980ms
+
+    안전하게 2100ms 동안 재클릭 방지.
+  */
 
   setTimeout(
     () => {
@@ -2827,7 +2542,7 @@ function toggleEnglish() {
         false;
 
     },
-    1750
+    2100
   );
 
 }
