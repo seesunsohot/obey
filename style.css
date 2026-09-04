@@ -411,18 +411,18 @@ body {
 
 @media (max-width: 600px) {
   #svg-container {
-    inset: auto;
+    position: fixed;
 
-    left: 0;
-    top: 34dvh;
+    inset: 0;
 
     width: 100%;
-    height: auto;
+    height: 100%;
 
     display: flex;
-
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+
+    padding-top: 34dvh;
 
     transform: none;
 
@@ -457,43 +457,5 @@ body {
     height: auto;
 
     transform: translateX(-50%);
-  }
-
-  /*
-    모바일:
-    개별 글자 blur 애니메이션 제거
-  */
-
-  #letter01,
-  #letter02,
-  #letter03,
-  #letter04,
-  #letter05,
-  #letter06,
-  .en-letter {
-    transition:
-      transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 1.45s ease !important;
-
-    transform-box: fill-box;
-    transform-origin: center;
-
-    overflow: visible !important;
-
-    will-change: transform, opacity;
-  }
-
-  /*
-    JS inline blur보다 강하게 덮음
-  */
-
-  #wordGroup #letter01,
-  #wordGroup #letter02,
-  #wordGroup #letter03,
-  #wordGroup #letter04,
-  #wordGroup #letter05,
-  #wordGroup #letter06,
-  #englishWordGroup .en-letter {
-    filter: none !important;
   }
 }
