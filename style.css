@@ -11,7 +11,6 @@ body {
   height: 100%;
 
   background: #000;
-
   overflow: hidden;
 }
 
@@ -28,9 +27,7 @@ body {
     sans-serif;
 
   touch-action: manipulation;
-
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -47,8 +44,7 @@ body {
   width: 100vw;
   height: auto;
 
-  transform:
-    translateX(-50%);
+  transform: translateX(-50%);
 
   z-index: 0;
 
@@ -92,12 +88,10 @@ body {
 
   opacity: 1;
 
-  filter:
-    blur(0px);
+  filter: blur(0px);
 
   /* 데스크톱 글자 위치 */
-  transform:
-    translateY(-160px);
+  transform: translateY(-160px);
 
   /* KR <-> EN 등장 */
   transition:
@@ -116,7 +110,6 @@ body {
 
 #svg-container.is-loading {
   opacity: 0;
-
   transition: none;
 }
 
@@ -127,9 +120,7 @@ body {
 
 #svg-container.language-out {
   opacity: 0;
-
-  filter:
-    blur(12px);
+  filter: blur(12px);
 
   transition:
     opacity 0.18s ease 0.34s,
@@ -143,9 +134,7 @@ body {
 
 #svg-container.language-in {
   opacity: 0;
-
-  filter:
-    blur(14px);
+  filter: blur(14px);
 
   transition: none;
 }
@@ -171,8 +160,7 @@ body {
 
   pointer-events: none;
 
-  flex:
-    0 0 auto;
+  flex: 0 0 auto;
 }
 
 
@@ -187,35 +175,27 @@ body {
 #letter05,
 #letter06 {
   transition:
-    transform 1.6s
-      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 1.45s ease,
     filter 1.45s ease;
 
-  transform-box:
-    fill-box;
-
-  transform-origin:
-    center;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 
 /* ==================================================
-   EN LETTERS
+   EN LETTERS - DESKTOP
 ================================================== */
 
 .en-letter {
   transition:
-    transform 1.6s
-      cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 1.45s ease,
     filter 1.45s ease;
 
-  transform-box:
-    fill-box;
-
-  transform-origin:
-    center;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 
@@ -225,12 +205,10 @@ body {
 
 #wordGroup,
 #englishWordGroup {
-  overflow:
-    visible !important;
+  overflow: visible !important;
 
   transition:
-    transform 1.6s
-      cubic-bezier(0.22, 1, 0.36, 1);
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 
@@ -252,16 +230,13 @@ body {
 
   border-radius: 7px;
 
-  background:
-    #919191;
+  background: #919191;
 
   pointer-events: auto;
 
-  touch-action:
-    manipulation;
+  touch-action: manipulation;
 
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -277,26 +252,17 @@ body {
   align-items: center;
   justify-content: center;
 
-  background:
-    #252525;
+  background: #252525;
 
-  color:
-    #969696;
+  color: #969696;
 
-  font-size:
-    8.5px;
+  font-size: 8.5px;
+  font-weight: 700;
 
-  font-weight:
-    700;
+  letter-spacing: -0.03em;
 
-  letter-spacing:
-    -0.03em;
-
-  user-select:
-    none;
-
-  -webkit-user-select:
-    none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 
@@ -308,16 +274,14 @@ body {
   width: 100%;
   height: 32px;
 
-  padding:
-    0 8px;
+  padding: 0 8px;
 
   display: flex;
 
   align-items: center;
   justify-content: space-between;
 
-  background:
-    #919191;
+  background: #919191;
 }
 
 
@@ -331,62 +295,43 @@ body {
 
   border: 0;
 
-  background:
-    transparent;
+  background: transparent;
 
-  color:
-    #242424;
+  color: #242424;
 
-  font-family:
-    inherit;
+  font-family: inherit;
 
-  font-size:
-    15px;
+  font-size: 15px;
+  font-weight: 500;
 
-  font-weight:
-    500;
+  line-height: 1;
 
-  line-height:
-    1;
+  letter-spacing: -0.08em;
 
-  letter-spacing:
-    -0.08em;
+  user-select: none;
+  -webkit-user-select: none;
 
-  user-select:
-    none;
+  pointer-events: auto;
 
-  -webkit-user-select:
-    none;
+  touch-action: manipulation;
 
-  pointer-events:
-    auto;
-
-  touch-action:
-    manipulation;
-
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mode-button {
-  cursor:
-    pointer;
-
-  opacity:
-    0.48;
+  cursor: pointer;
+  opacity: 0.48;
 
   transition:
     opacity 0.2s ease;
 }
 
 .mode-button.active-mode {
-  opacity:
-    1;
+  opacity: 1;
 }
 
 .mu-label {
-  font-size:
-    13px;
+  font-size: 13px;
 }
 
 
@@ -395,32 +340,22 @@ body {
 ================================================== */
 
 .switch-button {
-  position:
-    relative;
+  position: relative;
 
-  margin:
-    0;
+  margin: 0;
+  padding: 0;
 
-  padding:
-    0;
+  border: 0;
 
-  border:
-    0;
+  background: transparent;
 
-  background:
-    transparent;
+  cursor: pointer;
 
-  cursor:
-    pointer;
+  pointer-events: auto;
 
-  pointer-events:
-    auto;
+  touch-action: manipulation;
 
-  touch-action:
-    manipulation;
-
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -429,62 +364,41 @@ body {
 ================================================== */
 
 .switch {
-  position:
-    relative;
+  position: relative;
 
-  display:
-    block;
+  display: block;
 
-  width:
-    41px;
+  width: 41px;
+  height: 19px;
 
-  height:
-    19px;
+  border-radius: 999px;
 
-  border-radius:
-    999px;
+  background: #252525;
 
-  background:
-    #252525;
-
-  pointer-events:
-    none;
+  pointer-events: none;
 }
 
 .switch-knob {
-  position:
-    absolute;
+  position: absolute;
 
-  top:
-    3px;
+  top: 3px;
+  left: 3px;
 
-  left:
-    3px;
+  width: 13px;
+  height: 13px;
 
-  width:
-    13px;
+  border-radius: 50%;
 
-  height:
-    13px;
-
-  border-radius:
-    50%;
-
-  background:
-    #919191;
+  background: #919191;
 
   transition:
-    transform 0.3s
-      cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 
-  pointer-events:
-    none;
+  pointer-events: none;
 }
 
-.switch-button.is-on
-.switch-knob {
-  transform:
-    translateX(22px);
+.switch-button.is-on .switch-knob {
+  transform: translateX(22px);
 }
 
 
@@ -495,107 +409,75 @@ body {
 @media (max-width: 600px) {
 
   #svg-container {
-    inset:
-      auto;
+    inset: auto;
 
-    left:
-      0;
+    left: 0;
+    top: 34dvh;
 
-    top:
-      34dvh;
+    width: 100%;
+    height: auto;
 
-    width:
-      100%;
+    display: flex;
 
-    height:
-      auto;
+    align-items: center;
+    justify-content: center;
 
-    display:
-      flex;
+    transform: none;
 
-    align-items:
-      center;
-
-    justify-content:
-      center;
-
-    transform:
-      none;
-
-    overflow:
-      visible !important;
+    overflow: visible !important;
   }
 
 
   #svg-container svg {
-    width:
-      auto !important;
+    width: auto !important;
+    height: auto !important;
 
-    height:
-      auto !important;
+    max-width: 78vw !important;
+    max-height: 36vh !important;
 
-    max-width:
-      78vw !important;
-
-    max-height:
-      36vh !important;
-
-    overflow:
-      visible !important;
+    overflow: visible !important;
   }
 
 
   #wordGroup,
   #englishWordGroup {
-    overflow:
-      visible !important;
+    overflow: visible !important;
   }
 
 
   #controller {
-    top:
-      10px;
-
-    left:
-      10px;
+    top: 10px;
+    left: 10px;
   }
 
 
   .bg-video {
-    left:
-      50%;
+    left: 50%;
+    bottom: 0;
 
-    bottom:
-      0;
+    width: 100vw;
+    height: auto;
 
-    width:
-      100vw;
-
-    height:
-      auto;
-
-    transform:
-      translateX(-50%);
+    transform: translateX(-50%);
   }
 
 
   /*
-    모바일 영문:
-    GPU 강제 레이어화 관련 속성 제거.
-    blur만 빼서 부담 줄임.
+    모바일 영문은
+    CSS transform transition을 사용하지 않음.
+
+    transform attribute는 JS requestAnimationFrame으로 처리.
   */
 
   #englishWordGroup .en-letter {
-    filter:
-      none !important;
-
     transition:
-      transform 1.6s
-        cubic-bezier(0.22, 1, 0.36, 1),
       opacity 1.45s ease !important;
 
-    overflow:
-      visible !important;
+    filter: none !important;
+
+    transform: none !important;
+
+    overflow: visible !important;
   }
 
 }
