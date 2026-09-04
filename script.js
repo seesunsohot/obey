@@ -1094,7 +1094,9 @@ function toggleEnglish() {
         ${targetYY}px
       )`;
 
-    D.style.transform = `translateY(${MOVE_UP_1}px)`;
+    D.style.transform = isMobile
+      ? "translateY(0px)"
+      : `translateY(${MOVE_UP_1}px)`;
 
     D.style.opacity = "0";
 
@@ -1107,7 +1109,9 @@ function toggleEnglish() {
     S.style.filter = isMobile ? "none" : "blur(10px)";
 
     setTimeout(() => {
-      S2.style.transform = `translateY(${MOVE_UP_1}px)`;
+      S2.style.transform = isMobile
+        ? "translateY(0px)"
+        : `translateY(${MOVE_UP_1}px)`;
 
       S2.style.opacity = "0";
 
