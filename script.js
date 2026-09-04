@@ -3,25 +3,39 @@
 ================================================== */
 
 const container =
-  document.querySelector("#svg-container");
+  document.querySelector(
+    "#svg-container"
+  );
 
 const krLabel =
-  document.querySelector("#kr-label");
+  document.querySelector(
+    "#kr-label"
+  );
 
 const enLabel =
-  document.querySelector("#en-label");
+  document.querySelector(
+    "#en-label"
+  );
 
 const krSwitch =
-  document.querySelector("#kr-switch");
+  document.querySelector(
+    "#kr-switch"
+  );
 
 const enSwitch =
-  document.querySelector("#en-switch");
+  document.querySelector(
+    "#en-switch"
+  );
 
 const musicSwitch =
-  document.querySelector("#music-switch");
+  document.querySelector(
+    "#music-switch"
+  );
 
 const music =
-  document.querySelector("#music");
+  document.querySelector(
+    "#music"
+  );
 
 
 /* ==================================================
@@ -53,14 +67,16 @@ function playForwardVideo() {
 
   reverseVideo.pause();
 
-  reverseVideo.currentTime = 0;
+  reverseVideo.currentTime =
+    0;
 
   reverseVideo.classList.remove(
     "active"
   );
 
 
-  forwardVideo.currentTime = 0;
+  forwardVideo.currentTime =
+    0;
 
   forwardVideo.classList.add(
     "active"
@@ -69,14 +85,16 @@ function playForwardVideo() {
 
   forwardVideo
     .play()
-    .catch((error) => {
+    .catch(
+      (error) => {
 
-      console.error(
-        "정방향 배경 영상 재생 실패:",
-        error
-      );
+        console.error(
+          "정방향 배경 영상 재생 실패:",
+          error
+        );
 
-    });
+      }
+    );
 
 }
 
@@ -85,14 +103,16 @@ function playReverseVideo() {
 
   forwardVideo.pause();
 
-  forwardVideo.currentTime = 0;
+  forwardVideo.currentTime =
+    0;
 
   forwardVideo.classList.remove(
     "active"
   );
 
 
-  reverseVideo.currentTime = 0;
+  reverseVideo.currentTime =
+    0;
 
   reverseVideo.classList.add(
     "active"
@@ -101,14 +121,16 @@ function playReverseVideo() {
 
   reverseVideo
     .play()
-    .catch((error) => {
+    .catch(
+      (error) => {
 
-      console.error(
-        "리버스 배경 영상 재생 실패:",
-        error
-      );
+        console.error(
+          "리버스 배경 영상 재생 실패:",
+          error
+        );
 
-    });
+      }
+    );
 
 }
 
@@ -188,29 +210,22 @@ function wait(ms) {
 /* ==================================================
    EN TRANSFORM HELPERS
 
-   모바일 영문만 translate3d 사용
+   모바일/데스크톱 모두 2D transform
 ================================================== */
 
-function enTranslate(x, y) {
-
-  if (isMobile) {
-
-    return `translate3d(${x}px, ${y}px, 0)`;
-
-  }
+function enTranslate(
+  x,
+  y
+) {
 
   return `translate(${x}px, ${y}px)`;
 
 }
 
 
-function enTranslateY(y) {
-
-  if (isMobile) {
-
-    return `translate3d(0, ${y}px, 0)`;
-
-  }
+function enTranslateY(
+  y
+) {
 
   return `translateY(${y}px)`;
 
@@ -232,7 +247,8 @@ musicSwitch.addEventListener(
 
         await music.play();
 
-        musicOn = true;
+        musicOn =
+          true;
 
         musicSwitch.classList.add(
           "is-on"
@@ -255,7 +271,8 @@ musicSwitch.addEventListener(
 
       music.pause();
 
-      musicOn = false;
+      musicOn =
+        false;
 
       musicSwitch.classList.remove(
         "is-on"
@@ -274,7 +291,8 @@ musicSwitch.addEventListener(
 function updateLanguageUI() {
 
   if (
-    activeLanguage === "kr"
+    activeLanguage ===
+    "kr"
   ) {
 
     krLabel.classList.add(
@@ -310,30 +328,35 @@ async function changeLanguage(
   language
 ) {
 
-  if (languageChanging) {
-    return;
-  }
-
   if (
-    activeLanguage === language
+    languageChanging
   ) {
     return;
   }
 
 
-  languageChanging = true;
+  if (
+    activeLanguage ===
+    language
+  ) {
+    return;
+  }
 
 
-  /* ----------------------------------------------
-     OUT
-  ---------------------------------------------- */
+  languageChanging =
+    true;
+
+
+  /* OUT */
 
   container.classList.add(
     "language-out"
   );
 
 
-  await wait(560);
+  await wait(
+    560
+  );
 
 
   activeLanguage =
@@ -344,7 +367,8 @@ async function changeLanguage(
 
 
   if (
-    language === "en"
+    language ===
+    "en"
   ) {
 
     englishMode =
@@ -357,28 +381,29 @@ async function changeLanguage(
   }
 
 
-  /* ----------------------------------------------
-     SVG CHANGE
-  ---------------------------------------------- */
+  /* SVG CHANGE */
 
   if (
-    language === "kr"
+    language ===
+    "kr"
   ) {
 
-    await loadKorean(true);
+    await loadKorean(
+      true
+    );
 
   }
 
   else {
 
-    await loadEnglish(true);
+    await loadEnglish(
+      true
+    );
 
   }
 
 
-  /* ----------------------------------------------
-     IN
-  ---------------------------------------------- */
+  /* IN */
 
   container.classList.remove(
     "language-out"
@@ -409,10 +434,13 @@ async function changeLanguage(
   );
 
 
-  await wait(1200);
+  await wait(
+    1200
+  );
 
 
-  languageChanging = false;
+  languageChanging =
+    false;
 
 }
 
@@ -423,9 +451,12 @@ async function changeLanguage(
 
 krLabel.addEventListener(
   "click",
+
   () => {
 
-    changeLanguage("kr");
+    changeLanguage(
+      "kr"
+    );
 
   }
 );
@@ -433,9 +464,12 @@ krLabel.addEventListener(
 
 enLabel.addEventListener(
   "click",
+
   () => {
 
-    changeLanguage("en");
+    changeLanguage(
+      "en"
+    );
 
   }
 );
@@ -451,10 +485,13 @@ krSwitch.addEventListener(
   async () => {
 
     if (
-      activeLanguage !== "kr"
+      activeLanguage !==
+      "kr"
     ) {
 
-      await changeLanguage("kr");
+      await changeLanguage(
+        "kr"
+      );
 
       return;
 
@@ -477,10 +514,13 @@ enSwitch.addEventListener(
   async () => {
 
     if (
-      activeLanguage !== "en"
+      activeLanguage !==
+      "en"
     ) {
 
-      await changeLanguage("en");
+      await changeLanguage(
+        "en"
+      );
 
       return;
 
@@ -501,7 +541,9 @@ async function loadKorean(
   isLanguageSwitch = false
 ) {
 
-  if (!isLanguageSwitch) {
+  if (
+    !isLanguageSwitch
+  ) {
 
     container.classList.add(
       "is-loading"
@@ -550,10 +592,14 @@ async function loadKorean(
     }
 
 
-    setupKorean(svg);
+    setupKorean(
+      svg
+    );
 
 
-    if (!isLanguageSwitch) {
+    if (
+      !isLanguageSwitch
+    ) {
 
       requestAnimationFrame(
         () => {
@@ -577,7 +623,10 @@ async function loadKorean(
 
   catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     container.classList.remove(
       "is-loading"
@@ -592,25 +641,39 @@ async function loadKorean(
    KR SETUP
 ================================================== */
 
-function setupKorean(svg) {
+function setupKorean(
+  svg
+) {
 
   const letter01 =
-    svg.querySelector("#letter01");
+    svg.querySelector(
+      "#letter01"
+    );
 
   const letter02 =
-    svg.querySelector("#letter02");
+    svg.querySelector(
+      "#letter02"
+    );
 
   const letter03 =
-    svg.querySelector("#letter03");
+    svg.querySelector(
+      "#letter03"
+    );
 
   const letter04 =
-    svg.querySelector("#letter04");
+    svg.querySelector(
+      "#letter04"
+    );
 
   const letter05 =
-    svg.querySelector("#letter05");
+    svg.querySelector(
+      "#letter05"
+    );
 
   const letter06 =
-    svg.querySelector("#letter06");
+    svg.querySelector(
+      "#letter06"
+    );
 
 
   const letters = [
@@ -625,7 +688,8 @@ function setupKorean(svg) {
 
   if (
     letters.some(
-      (letter) => !letter
+      (letter) =>
+        !letter
     )
   ) {
 
@@ -667,11 +731,13 @@ function setupKorean(svg) {
   );
 
 
-  const GAP = 25;
+  const GAP =
+    25;
 
 
   const seBox =
     letter03.getBBox();
+
 
   const iBox =
     letter06.getBBox();
@@ -686,10 +752,12 @@ function setupKorean(svg) {
 
   const iFinalY =
     seBox.y +
-    seBox.height / 2 -
+    seBox.height /
+    2 -
     (
       iBox.y +
-      iBox.height / 2
+      iBox.height /
+      2
     );
 
 
@@ -698,9 +766,11 @@ function setupKorean(svg) {
     const viewBox =
       svg.viewBox.baseVal;
 
+
     return (
       viewBox.x +
-      viewBox.width / 2
+      viewBox.width /
+      2
     );
 
   }
@@ -710,8 +780,11 @@ function setupKorean(svg) {
     elements
   ) {
 
-    let minX = Infinity;
-    let maxX = -Infinity;
+    let minX =
+      Infinity;
+
+    let maxX =
+      -Infinity;
 
 
     elements.forEach(
@@ -731,7 +804,8 @@ function setupKorean(svg) {
         maxX =
           Math.max(
             maxX,
-            box.x + box.width
+            box.x +
+            box.width
           );
 
       }
@@ -739,8 +813,14 @@ function setupKorean(svg) {
 
 
     return {
-      x: minX,
-      width: maxX - minX,
+
+      x:
+        minX,
+
+      width:
+        maxX -
+        minX,
+
     };
 
   }
@@ -760,7 +840,8 @@ function setupKorean(svg) {
 
   const odysseusCenter =
     odysseusBox.x +
-    odysseusBox.width / 2;
+    odysseusBox.width /
+    2;
 
 
   const odysseusShift =
@@ -799,9 +880,15 @@ function setupKorean(svg) {
 
   const odysseyEnd =
     Math.max(
-      box01.x + box01.width,
-      box02.x + box02.width,
-      box03.x + box03.width,
+      box01.x +
+      box01.width,
+
+      box02.x +
+      box02.width,
+
+      box03.x +
+      box03.width,
+
       iFinalRight
     );
 
@@ -810,7 +897,8 @@ function setupKorean(svg) {
     (
       odysseyStart +
       odysseyEnd
-    ) / 2;
+    ) /
+    2;
 
 
   const odysseyShift =
@@ -836,7 +924,8 @@ function setupKorean(svg) {
 
 
   if (
-    koreanMode === "odyssey"
+    koreanMode ===
+    "odyssey"
   ) {
 
     showOdysseyInstant();
@@ -854,8 +943,6 @@ function setupKorean(svg) {
 
 /* ==================================================
    KR TRANSITIONS
-
-   한글은 원래대로 유지
 ================================================== */
 
 function restoreKoreanTransitions() {
@@ -866,10 +953,12 @@ function restoreKoreanTransitions() {
 
 
   const {
+
     letter04,
     letter05,
     letter06,
     wordGroup,
+
   } =
     koreanData;
 
@@ -976,7 +1065,9 @@ function showOdysseyInstant() {
 
 
   wordGroup.style.transform =
-    `translateX(${odysseyShift}px)`;
+    `translateX(
+      ${odysseyShift}px
+    )`;
 
 
   krSwitch.classList.remove(
@@ -1076,7 +1167,9 @@ function showOdysseusInstant() {
 
 
   wordGroup.style.transform =
-    `translateX(${odysseusShift}px)`;
+    `translateX(
+      ${odysseusShift}px
+    )`;
 
 
   krSwitch.classList.add(
@@ -1103,8 +1196,6 @@ function showOdysseusInstant() {
 
 /* ==================================================
    KR TOGGLE
-
-   기존 그대로
 ================================================== */
 
 function toggleKorean() {
@@ -1118,7 +1209,8 @@ function toggleKorean() {
   }
 
 
-  koreanAnimating = true;
+  koreanAnimating =
+    true;
 
 
   const {
@@ -1140,7 +1232,8 @@ function toggleKorean() {
 
 
   if (
-    koreanMode === "odyssey"
+    koreanMode ===
+    "odyssey"
   ) {
 
     koreanMode =
@@ -1153,7 +1246,9 @@ function toggleKorean() {
 
 
     wordGroup.style.transform =
-      `translateX(${odysseusShift}px)`;
+      `translateX(
+        ${odysseusShift}px
+      )`;
 
 
     letter06.style.transform =
@@ -1216,7 +1311,9 @@ function toggleKorean() {
 
 
     wordGroup.style.transform =
-      `translateX(${odysseyShift}px)`;
+      `translateX(
+        ${odysseyShift}px
+      )`;
 
 
     letter04.style.transform =
@@ -1271,7 +1368,8 @@ function toggleKorean() {
   setTimeout(
     () => {
 
-      koreanAnimating = false;
+      koreanAnimating =
+        false;
 
     },
     1750
@@ -1288,7 +1386,9 @@ async function loadEnglish(
   isLanguageSwitch = false
 ) {
 
-  if (!isLanguageSwitch) {
+  if (
+    !isLanguageSwitch
+  ) {
 
     container.classList.add(
       "is-loading"
@@ -1305,8 +1405,15 @@ async function loadEnglish(
     ] =
       await Promise.all(
         [
-          fetch("./img/en_od.svg"),
-          fetch("./img/en_ob.svg"),
+
+          fetch(
+            "./img/en_od.svg"
+          ),
+
+          fetch(
+            "./img/en_ob.svg"
+          ),
+
         ]
       );
 
@@ -1329,8 +1436,11 @@ async function loadEnglish(
     ] =
       await Promise.all(
         [
+
           odResponse.text(),
+
           obResponse.text(),
+
         ]
       );
 
@@ -1372,28 +1482,44 @@ async function loadEnglish(
 
 
     const O =
-      svg.querySelector("#letter_O");
+      svg.querySelector(
+        "#letter_O"
+      );
 
     const D =
-      svg.querySelector("#letter_D");
+      svg.querySelector(
+        "#letter_D"
+      );
 
     const Y =
-      svg.querySelector("#letter_Y");
+      svg.querySelector(
+        "#letter_Y"
+      );
 
     const S =
-      svg.querySelector("#letter_S");
+      svg.querySelector(
+        "#letter_S"
+      );
 
     const S2 =
-      svg.querySelector("#letter_S2");
+      svg.querySelector(
+        "#letter_S2"
+      );
 
     const E =
-      svg.querySelector("#letter_E");
+      svg.querySelector(
+        "#letter_E"
+      );
 
     const U =
-      svg.querySelector("#letter_U");
+      svg.querySelector(
+        "#letter_U"
+      );
 
     const S1 =
-      svg.querySelector("#letter_S1");
+      svg.querySelector(
+        "#letter_S1"
+      );
 
 
     const odLetters = [
@@ -1410,7 +1536,8 @@ async function loadEnglish(
 
     if (
       odLetters.some(
-        (letter) => !letter
+        (letter) =>
+          !letter
       )
     ) {
 
@@ -1463,7 +1590,9 @@ async function loadEnglish(
     );
 
 
-    svg.appendChild(B);
+    svg.appendChild(
+      B
+    );
 
 
     const SVG_NS =
@@ -1524,11 +1653,14 @@ async function loadEnglish(
     const obeyOffsetX =
       (
         odViewBox.x +
-        odViewBox.width / 2
-      ) -
+        odViewBox.width /
+        2
+      )
+      -
       (
         obViewBox.x +
-        obViewBox.width / 2
+        obViewBox.width /
+        2
       );
 
 
@@ -1621,7 +1753,9 @@ async function loadEnglish(
     showEnglishOdysseusInstant();
 
 
-    if (!isLanguageSwitch) {
+    if (
+      !isLanguageSwitch
+    ) {
 
       requestAnimationFrame(
         () => {
@@ -1645,7 +1779,10 @@ async function loadEnglish(
 
   catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     container.classList.remove(
       "is-loading"
@@ -1701,16 +1838,24 @@ function getObeyBoxes(
 
 
   const O =
-    svg.querySelector("#letter_O");
+    svg.querySelector(
+      "#letter_O"
+    );
 
   const B =
-    svg.querySelector("#letter_B");
+    svg.querySelector(
+      "#letter_B"
+    );
 
   const E =
-    svg.querySelector("#letter_E");
+    svg.querySelector(
+      "#letter_E"
+    );
 
   const Y =
-    svg.querySelector("#letter_Y");
+    svg.querySelector(
+      "#letter_Y"
+    );
 
 
   if (
@@ -1730,7 +1875,9 @@ function getObeyBoxes(
   }
 
 
-  function copyBox(element) {
+  function copyBox(
+    element
+  ) {
 
     const box =
       element.getBBox();
@@ -1738,11 +1885,17 @@ function getObeyBoxes(
 
     return {
 
-      x: box.x,
-      y: box.y,
+      x:
+        box.x,
 
-      width: box.width,
-      height: box.height,
+      y:
+        box.y,
+
+      width:
+        box.width,
+
+      height:
+        box.height,
 
     };
 
@@ -1751,10 +1904,17 @@ function getObeyBoxes(
 
   const result = {
 
-    O: copyBox(O),
-    B: copyBox(B),
-    E: copyBox(E),
-    Y: copyBox(Y),
+    O:
+      copyBox(O),
+
+    B:
+      copyBox(B),
+
+    E:
+      copyBox(E),
+
+    Y:
+      copyBox(Y),
 
   };
 
@@ -1770,8 +1930,8 @@ function getObeyBoxes(
 /* ==================================================
    EN TRANSITIONS
 
-   모바일에서도 속도/거리 동일.
-   개별 blur만 제거.
+   모바일에서도 2D transform
+   blur만 제거
 ================================================== */
 
 function restoreEnglishTransitions() {
@@ -1904,7 +2064,10 @@ function showEnglishOdysseusInstant() {
         "none";
 
       letter.style.transform =
-        enTranslate(0, 0);
+        enTranslate(
+          0,
+          0
+        );
 
     }
   );
@@ -1968,7 +2131,8 @@ function toggleEnglish() {
   }
 
 
-  englishAnimating = true;
+  englishAnimating =
+    true;
 
 
   const {
@@ -2000,7 +2164,7 @@ function toggleEnglish() {
 
 
   /* ==================================================
-     ODYSSEUS → OBEY
+     ODYSSEUS -> OBEY
   ================================================== */
 
   if (
@@ -2039,7 +2203,9 @@ function toggleEnglish() {
 
 
     D.style.transform =
-      enTranslateY(-140);
+      enTranslateY(
+        -140
+      );
 
     D.style.opacity =
       "0";
@@ -2051,7 +2217,9 @@ function toggleEnglish() {
 
 
     S.style.transform =
-      enTranslateY(150);
+      enTranslateY(
+        150
+      );
 
     S.style.opacity =
       "0";
@@ -2066,7 +2234,9 @@ function toggleEnglish() {
       () => {
 
         S2.style.transform =
-          enTranslateY(-150);
+          enTranslateY(
+            -150
+          );
 
         S2.style.opacity =
           "0";
@@ -2085,7 +2255,9 @@ function toggleEnglish() {
       () => {
 
         U.style.transform =
-          enTranslateY(160);
+          enTranslateY(
+            160
+          );
 
         U.style.opacity =
           "0";
@@ -2104,7 +2276,9 @@ function toggleEnglish() {
       () => {
 
         S1.style.transform =
-          enTranslateY(-160);
+          enTranslateY(
+            -160
+          );
 
         S1.style.opacity =
           "0";
@@ -2142,7 +2316,7 @@ function toggleEnglish() {
 
 
   /* ==================================================
-     OBEY → ODYSSEUS
+     OBEY -> ODYSSEUS
   ================================================== */
 
   else {
@@ -2172,20 +2346,31 @@ function toggleEnglish() {
 
 
     O.style.transform =
-      enTranslate(0, 0);
+      enTranslate(
+        0,
+        0
+      );
 
     E.style.transform =
-      enTranslate(0, 0);
+      enTranslate(
+        0,
+        0
+      );
 
     Y.style.transform =
-      enTranslate(0, 0);
+      enTranslate(
+        0,
+        0
+      );
 
 
     setTimeout(
       () => {
 
         D.style.transform =
-          enTranslateY(0);
+          enTranslateY(
+            0
+          );
 
         D.style.opacity =
           "1";
@@ -2202,7 +2387,9 @@ function toggleEnglish() {
       () => {
 
         S.style.transform =
-          enTranslateY(0);
+          enTranslateY(
+            0
+          );
 
         S.style.opacity =
           "1";
@@ -2219,7 +2406,9 @@ function toggleEnglish() {
       () => {
 
         S2.style.transform =
-          enTranslateY(0);
+          enTranslateY(
+            0
+          );
 
         S2.style.opacity =
           "1";
@@ -2236,7 +2425,9 @@ function toggleEnglish() {
       () => {
 
         U.style.transform =
-          enTranslateY(0);
+          enTranslateY(
+            0
+          );
 
         U.style.opacity =
           "1";
@@ -2253,7 +2444,9 @@ function toggleEnglish() {
       () => {
 
         S1.style.transform =
-          enTranslateY(0);
+          enTranslateY(
+            0
+          );
 
         S1.style.opacity =
           "1";
@@ -2271,7 +2464,8 @@ function toggleEnglish() {
   setTimeout(
     () => {
 
-      englishAnimating = false;
+      englishAnimating =
+        false;
 
     },
     1750
