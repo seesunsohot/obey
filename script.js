@@ -66,22 +66,15 @@ const reverseVideo =
 function playForwardVideo() {
 
   reverseVideo.pause();
-
-  reverseVideo.currentTime =
-    0;
-
+  reverseVideo.currentTime = 0;
   reverseVideo.classList.remove(
     "active"
   );
 
-
-  forwardVideo.currentTime =
-    0;
-
+  forwardVideo.currentTime = 0;
   forwardVideo.classList.add(
     "active"
   );
-
 
   forwardVideo
     .play()
@@ -102,22 +95,15 @@ function playForwardVideo() {
 function playReverseVideo() {
 
   forwardVideo.pause();
-
-  forwardVideo.currentTime =
-    0;
-
+  forwardVideo.currentTime = 0;
   forwardVideo.classList.remove(
     "active"
   );
 
-
-  reverseVideo.currentTime =
-    0;
-
+  reverseVideo.currentTime = 0;
   reverseVideo.classList.add(
     "active"
   );
-
 
   reverseVideo
     .play()
@@ -137,21 +123,12 @@ function playReverseVideo() {
 
 forwardVideo.addEventListener(
   "ended",
-  () => {
-
-    playReverseVideo();
-
-  }
+  playReverseVideo
 );
-
 
 reverseVideo.addEventListener(
   "ended",
-  () => {
-
-    playForwardVideo();
-
-  }
+  playForwardVideo
 );
 
 
@@ -194,40 +171,117 @@ let musicOn =
 function wait(ms) {
 
   return new Promise(
-    (resolve) => {
-
+    (resolve) =>
       setTimeout(
         resolve,
         ms
-      );
-
-    }
+      )
   );
 
 }
 
 
 /* ==================================================
-   EN TRANSFORM HELPERS
-
-   모바일/데스크톱 모두 2D transform
+   EASING
 ================================================== */
 
-function enTranslate(
-  x,
-  y
-) {
+function easeOutQuint(t) {
 
-  return `translate(${x}px, ${y}px)`;
+  return (
+    1 -
+    Math.pow(
+      1 - t,
+      5
+    )
+  );
 
 }
 
 
-function enTranslateY(
-  y
+/* ==================================================
+   MOBILE SVG ATTRIBUTE ANIMATION
+
+   CSS transform 대신
+   실제 SVG transform attribute를 애니메이션
+================================================== */
+
+function animateSvgTranslate(
+  element,
+  fromX,
+  fromY,
+  toX,
+  toY,
+  duration = 1600
 ) {
 
-  return `translateY(${y}px)`;
+  if (!element) {
+    return;
+  }
+
+
+  const start =
+    performance.now();
+
+
+  function frame(now) {
+
+    const elapsed =
+      now - start;
+
+
+    const progress =
+      Math.min(
+        elapsed / duration,
+        1
+      );
+
+
+    const eased =
+      easeOutQuint(
+        progress
+      );
+
+
+    const x =
+      fromX +
+      (
+        toX -
+        fromX
+      ) *
+      eased;
+
+
+    const y =
+      fromY +
+      (
+        toY -
+        fromY
+      ) *
+      eased;
+
+
+    element.setAttribute(
+      "transform",
+      `translate(${x} ${y})`
+    );
+
+
+    if (
+      progress < 1
+    ) {
+
+      requestAnimationFrame(
+        frame
+      );
+
+    }
+
+  }
+
+
+  requestAnimationFrame(
+    frame
+  );
 
 }
 
@@ -347,8 +401,6 @@ async function changeLanguage(
     true;
 
 
-  /* OUT */
-
   container.classList.add(
     "language-out"
   );
@@ -381,8 +433,6 @@ async function changeLanguage(
   }
 
 
-  /* SVG CHANGE */
-
   if (
     language ===
     "kr"
@@ -402,8 +452,6 @@ async function changeLanguage(
 
   }
 
-
-  /* IN */
 
   container.classList.remove(
     "language-out"
@@ -1928,71 +1976,6 @@ function getObeyBoxes(
 
 
 /* ==================================================
-   EN TRANSITIONS
-
-   모바일에서도 2D transform
-   blur만 제거
-================================================== */
-
-function restoreEnglishTransitions() {
-
-  if (!englishData) {
-    return;
-  }
-
-
-  const transition =
-    isMobile
-      ? `
-          transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
-          opacity 1.45s ease
-        `
-      : `
-          transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
-          opacity 1.45s ease,
-          filter 1.45s ease
-        `;
-
-
-  const {
-
-    O,
-    D,
-    Y,
-    S,
-    S2,
-    E,
-    U,
-    S1,
-    B,
-
-  } =
-    englishData;
-
-
-  [
-    O,
-    D,
-    Y,
-    S,
-    S2,
-    E,
-    U,
-    S1,
-    B,
-  ].forEach(
-    (letter) => {
-
-      letter.style.transition =
-        transition;
-
-    }
-  );
-
-}
-
-
-/* ==================================================
    EN INITIAL
 ================================================== */
 
@@ -2041,6 +2024,13 @@ function showEnglishOdysseusInstant() {
       letter.style.transition =
         "none";
 
+      letter.style.transform =
+        "none";
+
+      letter.removeAttribute(
+        "transform"
+      );
+
     }
   );
 
@@ -2063,12 +2053,6 @@ function showEnglishOdysseusInstant() {
       letter.style.filter =
         "none";
 
-      letter.style.transform =
-        enTranslate(
-          0,
-          0
-        );
-
     }
   );
 
@@ -2083,11 +2067,29 @@ function showEnglishOdysseusInstant() {
       : "blur(10px)";
 
 
-  B.style.transform =
-    enTranslate(
-      targetBX,
-      targetBY + 120
+  if (
+    isMobile
+  ) {
+
+    B.setAttribute(
+      "transform",
+      `translate(
+        ${targetBX}
+        ${targetBY + 120}
+      )`
     );
+
+  }
+
+  else {
+
+    B.style.transform =
+      `translate(
+        ${targetBX}px,
+        ${targetBY + 120}px
+      )`;
+
+  }
 
 
   englishMode =
@@ -2099,16 +2101,81 @@ function showEnglishOdysseusInstant() {
   );
 
 
-  requestAnimationFrame(
-    () => {
+  if (
+    !isMobile
+  ) {
 
-      requestAnimationFrame(
-        () => {
+    requestAnimationFrame(
+      () => {
 
-          restoreEnglishTransitions();
+        requestAnimationFrame(
+          () => {
 
-        }
-      );
+            restoreEnglishTransitions();
+
+          }
+        );
+
+      }
+    );
+
+  }
+
+}
+
+
+/* ==================================================
+   EN TRANSITIONS
+================================================== */
+
+function restoreEnglishTransitions() {
+
+  if (
+    !englishData
+  ) {
+    return;
+  }
+
+
+  const {
+
+    O,
+    D,
+    Y,
+    S,
+    S2,
+    E,
+    U,
+    S1,
+    B,
+
+  } =
+    englishData;
+
+
+  const transition =
+    `
+      transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 1.45s ease,
+      filter 1.45s ease
+    `;
+
+
+  [
+    O,
+    D,
+    Y,
+    S,
+    S2,
+    E,
+    U,
+    S1,
+    B,
+  ].forEach(
+    (letter) => {
+
+      letter.style.transition =
+        transition;
 
     }
   );
@@ -2164,7 +2231,345 @@ function toggleEnglish() {
 
 
   /* ==================================================
-     ODYSSEUS -> OBEY
+     MOBILE
+  ================================================== */
+
+  if (
+    isMobile
+  ) {
+
+    if (
+      englishMode ===
+      "odysseus"
+    ) {
+
+      englishMode =
+        "obey";
+
+
+      enSwitch.classList.add(
+        "is-on"
+      );
+
+
+      animateSvgTranslate(
+        O,
+        0,
+        0,
+        targetOX,
+        targetOY,
+        1600
+      );
+
+
+      animateSvgTranslate(
+        E,
+        0,
+        0,
+        targetEX,
+        targetEY,
+        1600
+      );
+
+
+      animateSvgTranslate(
+        Y,
+        0,
+        0,
+        targetYX,
+        targetYY,
+        1600
+      );
+
+
+      animateSvgTranslate(
+        D,
+        0,
+        0,
+        0,
+        -140,
+        1600
+      );
+
+      D.style.opacity =
+        "0";
+
+
+      animateSvgTranslate(
+        S,
+        0,
+        0,
+        0,
+        150,
+        1600
+      );
+
+      S.style.opacity =
+        "0";
+
+
+      setTimeout(
+        () => {
+
+          animateSvgTranslate(
+            S2,
+            0,
+            0,
+            0,
+            -150,
+            1600
+          );
+
+          S2.style.opacity =
+            "0";
+
+        },
+        70
+      );
+
+
+      setTimeout(
+        () => {
+
+          animateSvgTranslate(
+            U,
+            0,
+            0,
+            0,
+            160,
+            1600
+          );
+
+          U.style.opacity =
+            "0";
+
+        },
+        130
+      );
+
+
+      setTimeout(
+        () => {
+
+          animateSvgTranslate(
+            S1,
+            0,
+            0,
+            0,
+            -160,
+            1600
+          );
+
+          S1.style.opacity =
+            "0";
+
+        },
+        190
+      );
+
+
+      setTimeout(
+        () => {
+
+          B.style.opacity =
+            "1";
+
+
+          animateSvgTranslate(
+            B,
+            targetBX,
+            targetBY + 120,
+            targetBX,
+            targetBY,
+            1600
+          );
+
+        },
+        300
+      );
+
+    }
+
+    else {
+
+      englishMode =
+        "odysseus";
+
+
+      enSwitch.classList.remove(
+        "is-on"
+      );
+
+
+      B.style.opacity =
+        "0";
+
+
+      animateSvgTranslate(
+        B,
+        targetBX,
+        targetBY,
+        targetBX,
+        targetBY + 120,
+        1600
+      );
+
+
+      animateSvgTranslate(
+        O,
+        targetOX,
+        targetOY,
+        0,
+        0,
+        1600
+      );
+
+
+      animateSvgTranslate(
+        E,
+        targetEX,
+        targetEY,
+        0,
+        0,
+        1600
+      );
+
+
+      animateSvgTranslate(
+        Y,
+        targetYX,
+        targetYY,
+        0,
+        0,
+        1600
+      );
+
+
+      setTimeout(
+        () => {
+
+          D.style.opacity =
+            "1";
+
+
+          animateSvgTranslate(
+            D,
+            0,
+            -140,
+            0,
+            0,
+            1600
+          );
+
+        },
+        180
+      );
+
+
+      setTimeout(
+        () => {
+
+          S.style.opacity =
+            "1";
+
+
+          animateSvgTranslate(
+            S,
+            0,
+            150,
+            0,
+            0,
+            1600
+          );
+
+        },
+        230
+      );
+
+
+      setTimeout(
+        () => {
+
+          S2.style.opacity =
+            "1";
+
+
+          animateSvgTranslate(
+            S2,
+            0,
+            -150,
+            0,
+            0,
+            1600
+          );
+
+        },
+        280
+      );
+
+
+      setTimeout(
+        () => {
+
+          U.style.opacity =
+            "1";
+
+
+          animateSvgTranslate(
+            U,
+            0,
+            160,
+            0,
+            0,
+            1600
+          );
+
+        },
+        330
+      );
+
+
+      setTimeout(
+        () => {
+
+          S1.style.opacity =
+            "1";
+
+
+          animateSvgTranslate(
+            S1,
+            0,
+            -160,
+            0,
+            0,
+            1600
+          );
+
+        },
+        380
+      );
+
+    }
+
+
+    setTimeout(
+      () => {
+
+        englishAnimating =
+          false;
+
+      },
+      1900
+    );
+
+
+    return;
+
+  }
+
+
+  /* ==================================================
+     DESKTOP
   ================================================== */
 
   if (
@@ -2182,69 +2587,57 @@ function toggleEnglish() {
 
 
     O.style.transform =
-      enTranslate(
-        targetOX,
-        targetOY
-      );
+      `translate(
+        ${targetOX}px,
+        ${targetOY}px
+      )`;
 
 
     E.style.transform =
-      enTranslate(
-        targetEX,
-        targetEY
-      );
+      `translate(
+        ${targetEX}px,
+        ${targetEY}px
+      )`;
 
 
     Y.style.transform =
-      enTranslate(
-        targetYX,
-        targetYY
-      );
+      `translate(
+        ${targetYX}px,
+        ${targetYY}px
+      )`;
 
 
     D.style.transform =
-      enTranslateY(
-        -140
-      );
+      "translateY(-140px)";
 
     D.style.opacity =
       "0";
 
     D.style.filter =
-      isMobile
-        ? "none"
-        : "blur(10px)";
+      "blur(10px)";
 
 
     S.style.transform =
-      enTranslateY(
-        150
-      );
+      "translateY(150px)";
 
     S.style.opacity =
       "0";
 
     S.style.filter =
-      isMobile
-        ? "none"
-        : "blur(10px)";
+      "blur(10px)";
 
 
     setTimeout(
       () => {
 
         S2.style.transform =
-          enTranslateY(
-            -150
-          );
+          "translateY(-150px)";
 
         S2.style.opacity =
           "0";
 
         S2.style.filter =
-          isMobile
-            ? "none"
-            : "blur(10px)";
+          "blur(10px)";
 
       },
       70
@@ -2255,17 +2648,13 @@ function toggleEnglish() {
       () => {
 
         U.style.transform =
-          enTranslateY(
-            160
-          );
+          "translateY(160px)";
 
         U.style.opacity =
           "0";
 
         U.style.filter =
-          isMobile
-            ? "none"
-            : "blur(10px)";
+          "blur(10px)";
 
       },
       130
@@ -2276,17 +2665,13 @@ function toggleEnglish() {
       () => {
 
         S1.style.transform =
-          enTranslateY(
-            -160
-          );
+          "translateY(-160px)";
 
         S1.style.opacity =
           "0";
 
         S1.style.filter =
-          isMobile
-            ? "none"
-            : "blur(10px)";
+          "blur(10px)";
 
       },
       190
@@ -2297,27 +2682,22 @@ function toggleEnglish() {
       () => {
 
         B.style.transform =
-          enTranslate(
-            targetBX,
-            targetBY
-          );
+          `translate(
+            ${targetBX}px,
+            ${targetBY}px
+          )`;
 
         B.style.opacity =
           "1";
 
         B.style.filter =
-          "none";
+          "blur(0px)";
 
       },
       300
     );
 
   }
-
-
-  /* ==================================================
-     OBEY -> ODYSSEUS
-  ================================================== */
 
   else {
 
@@ -2331,52 +2711,39 @@ function toggleEnglish() {
 
 
     B.style.transform =
-      enTranslate(
-        targetBX,
-        targetBY + 120
-      );
+      `translate(
+        ${targetBX}px,
+        ${targetBY + 120}px
+      )`;
 
     B.style.opacity =
       "0";
 
     B.style.filter =
-      isMobile
-        ? "none"
-        : "blur(10px)";
+      "blur(10px)";
 
 
     O.style.transform =
-      enTranslate(
-        0,
-        0
-      );
+      "translate(0px, 0px)";
 
     E.style.transform =
-      enTranslate(
-        0,
-        0
-      );
+      "translate(0px, 0px)";
 
     Y.style.transform =
-      enTranslate(
-        0,
-        0
-      );
+      "translate(0px, 0px)";
 
 
     setTimeout(
       () => {
 
         D.style.transform =
-          enTranslateY(
-            0
-          );
+          "translateY(0px)";
 
         D.style.opacity =
           "1";
 
         D.style.filter =
-          "none";
+          "blur(0px)";
 
       },
       180
@@ -2387,15 +2754,13 @@ function toggleEnglish() {
       () => {
 
         S.style.transform =
-          enTranslateY(
-            0
-          );
+          "translateY(0px)";
 
         S.style.opacity =
           "1";
 
         S.style.filter =
-          "none";
+          "blur(0px)";
 
       },
       230
@@ -2406,15 +2771,13 @@ function toggleEnglish() {
       () => {
 
         S2.style.transform =
-          enTranslateY(
-            0
-          );
+          "translateY(0px)";
 
         S2.style.opacity =
           "1";
 
         S2.style.filter =
-          "none";
+          "blur(0px)";
 
       },
       280
@@ -2425,15 +2788,13 @@ function toggleEnglish() {
       () => {
 
         U.style.transform =
-          enTranslateY(
-            0
-          );
+          "translateY(0px)";
 
         U.style.opacity =
           "1";
 
         U.style.filter =
-          "none";
+          "blur(0px)";
 
       },
       330
@@ -2444,15 +2805,13 @@ function toggleEnglish() {
       () => {
 
         S1.style.transform =
-          enTranslateY(
-            0
-          );
+          "translateY(0px)";
 
         S1.style.opacity =
           "1";
 
         S1.style.filter =
-          "none";
+          "blur(0px)";
 
       },
       380
