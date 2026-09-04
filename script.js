@@ -22,12 +22,9 @@ const music = document.querySelector("#music");
 
 const isMobile = window.matchMedia("(max-width: 600px)").matches;
 
-/*
-  데스크톱은 기존 이동거리 유지
-
-  모바일에서는 SVG 바깥으로
-  너무 멀리 움직이지 않도록 줄임
-*/
+/* ==================================================
+   MOVEMENT
+================================================== */
 
 const MOVE_UP_1 = isMobile ? -55 : -150;
 
@@ -176,10 +173,6 @@ async function changeLanguage(language) {
 
   languageChanging = true;
 
-  /* ==============================
-     OUT
-  ============================== */
-
   container.classList.add("language-out");
 
   await wait(560);
@@ -194,28 +187,15 @@ async function changeLanguage(language) {
     enSwitch.classList.remove("is-on");
   }
 
-  /* ==============================
-     SVG CHANGE
-  ============================== */
-
   if (language === "kr") {
     await loadKorean(true);
   } else {
     await loadEnglish(true);
   }
 
-  /* ==============================
-     IN
-  ============================== */
-
   container.classList.remove("language-out");
 
   container.classList.add("language-in");
-
-  /*
-    현재 blur + opacity 0
-    상태를 브라우저에 확정
-  */
 
   void container.offsetWidth;
 
@@ -307,18 +287,7 @@ async function loadKorean(isLanguageSwitch = false) {
     container.innerHTML = svgText;
 
     const svg = container.querySelector("svg");
-    if (isMobile) {
-      const viewBox = svg.viewBox.baseVal;
 
-      const paddingY = 140;
-
-      svg.setAttribute(
-        "viewBox",
-        `${viewBox.x} ${viewBox.y - paddingY} ${viewBox.width} ${viewBox.height + paddingY * 2}`,
-      );
-
-      svg.style.overflow = "visible";
-    }
     if (!svg) {
       throw new Error("SVG를 찾을 수 없습니다.");
     }
@@ -479,10 +448,6 @@ function restoreKoreanTransitions() {
   }
 
   const { letter04, letter05, letter06, wordGroup } = koreanData;
-
-  /*
-    모바일은 filter transition 제거
-  */
 
   const transition = isMobile
     ? `
@@ -1105,6 +1070,11 @@ function toggleEnglish() {
         ${targetYY}px
       )`;
 
+    /* =========================================
+       MOBILE:
+       위로 올라가지 않고 제자리 fade-out
+    ========================================== */
+
     D.style.transform = isMobile
       ? "translateY(0px)"
       : `translateY(${MOVE_UP_1}px)`;
@@ -1113,6 +1083,11 @@ function toggleEnglish() {
 
     D.style.filter = isMobile ? "none" : "blur(10px)";
 
+    /*
+      S는 아래로 내려가는 글자라
+      기존 모션 유지
+    */
+
     S.style.transform = `translateY(${MOVE_DOWN_1}px)`;
 
     S.style.opacity = "0";
@@ -1120,6 +1095,11 @@ function toggleEnglish() {
     S.style.filter = isMobile ? "none" : "blur(10px)";
 
     setTimeout(() => {
+      /*
+          S2도 모바일에서는
+          위로 안 올라감
+        */
+
       S2.style.transform = isMobile
         ? "translateY(0px)"
         : `translateY(${MOVE_UP_1}px)`;
@@ -1130,6 +1110,10 @@ function toggleEnglish() {
     }, 70);
 
     setTimeout(() => {
+      /*
+          U는 아래로 내려가므로 유지
+        */
+
       U.style.transform = `translateY(${MOVE_DOWN_2}px)`;
 
       U.style.opacity = "0";
@@ -1138,7 +1122,14 @@ function toggleEnglish() {
     }, 130);
 
     setTimeout(() => {
-      S1.style.transform = `translateY(${MOVE_UP_2}px)`;
+      /*
+          S1도 모바일에서는
+          위로 안 올라감
+        */
+
+      S1.style.transform = isMobile
+        ? "translateY(0px)"
+        : `translateY(${MOVE_UP_2}px)`;
 
       S1.style.opacity = "0";
 
