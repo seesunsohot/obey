@@ -412,7 +412,6 @@ body {
 @media (max-width: 600px) {
   #svg-container {
     position: fixed;
-
     inset: 0;
 
     width: 100%;
@@ -450,12 +449,18 @@ body {
   }
 
   .bg-video {
-    left: 50%;
+    position: fixed;
+
+    left: 0;
+    right: auto;
     bottom: 0;
 
     width: 100vw;
     height: auto;
 
-    transform: translateX(-50%);
+    /* 중요 */
+    transform: none !important;
+
+    pointer-events: none;
   }
 }
